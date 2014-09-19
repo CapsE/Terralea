@@ -1,0 +1,59 @@
+﻿<html>
+<head>
+ <title>Terralea</title>
+ <link href="/style.css" rel="stylesheet">
+ <script src="/js/three.min.js"></script>
+ <script src="/scripts/modelCreator.js" type="text/javascript"></script>
+</head>
+<body style="background-color:#D7F1F8;">
+	<div id="navigation">
+		<a href="/"><img src="/Img/Header.png" style="width:400px; height:75px; float:left;"></img></a>
+		<div class="menuItem" style="background-color:#CAE65C"><a class="menuItemText" href="/about">Über Terralea</a></div>
+		<div class="menuItem" style="background-color:#548E08"><a class="menuItemText" href="/models">Alle Models</a></div>
+		<div class="menuItem" style="background-color:#9FD5FF"><a class="menuItemText" href="/user/create">create Account</a></div>
+		<div class="menuItem" style="background-color:#CAE65C"><a class="menuItemText" href="/VoxelEditor">Voxel Editor</a></div>
+		<div class="menuItem" style="background-color:#548E08"><a class="menuItemText" href="/mymodels">Meine Models</a></div>
+		<div id="user" style="position:absolute; top:0px; right:0px; width:75px;">
+			<% if session["user"] != nil %>
+				<img src="/<%= session["user"].picture %>" style="height:75px;"></img>
+			<% else %>
+				<div class="menuItem" style="background-color:#548E08; float:right;"><a class="menuItemText" href="/login">Login</a></div>
+			<% end %>
+		</div>
+	</div>
+	
+	<% if flash[:notice] %>
+		<p id="alert" class="alert alert-success"><%= flash[:notice] %>
+	<% elsif flash[:error] %>
+		<p id="alert" class="alert alert-error"><%= flash[:error] %>
+	<% else %>
+		<p id="alert" class="alert alert-error" style="display:none"><%= flash[:error] %>
+	<% end %>
+	
+	<div id="main" style="">
+		<%= yield %>
+	</div><br>
+	<img src="/Img/Footer.png" style="width:100%;display:inline; position:relative; top:-30px;"></img>
+</body>
+<script>
+	function hideAlert(){
+		document.getElementById("alert").style.display = "none";
+	}
+	setTimeout("hideAlert()", 4000);
+	
+	var items = document.getElementsByClassName("menuItemText");
+	for(var i = 0; i < items.length; i++){
+		items[i].onmouseover = function(e){e.target.parentNode.style.height = "85px";};
+		items[i].onmouseout = function(e){e.target.parentNode.style.height = "75px";};
+		items[i].parentNode.onmouseover = function(e){e.target.style.height = "85px";};
+		items[i].parentNode.onmouseout = function(e){e.target.style.height = "75px";};
+	}
+	
+	function sendRequest(url, data){
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("POST",url,true);
+		xmlhttp.setRequestHeader("Content-type","application/json");
+		xmlhttp.send(JSON.stringify(data));
+	}
+</script>
+</html>

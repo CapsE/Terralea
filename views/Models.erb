@@ -1,0 +1,40 @@
+<div id="sub2" class="sub2">
+	<h2>Neuste Models</h2>
+	<div style="clear:left">
+		<% @newModels.each do |m| %>
+			<div class="ModelHolder" style="float:left; margin:5px;">
+				<a href="/VoxelViewer/<%= m.id %>"><img src="<%= m.picture %>" style="width:200px; height:120px;"></img></a>
+				<div>Erstellt von: <a href="/"><%= m.creator %></a></div>
+				<% if session["user"] == nil || hasLiked(session["user"], m) %>
+					<div>Likes: <%= m.likes %> </div>
+				<% else %>
+					<div>Likes: <%= m.likes %> <img src="Img/Like.png" class="like" data-target="<%= m.id %>" onclick="like(event)" style="width:12px;"></img></div>
+				<% end %>
+			</div>
+		<% end %>
+	</div>
+	<hr style="clear:left">
+	<h2>Beste Models</h2>
+	<div>
+		<% @bestModels.each do |m| %>
+			<div class="ModelHolder" style="float:left;">
+				<a href="/VoxelViewer/<%= m.id %>"><img src="<%= m.picture %>" style="width:200px; height:120px;"></img></a>
+				<div>Erstellt von: <a href="/"><%= m.creator %></a></div>
+				<% if session["user"] == nil || hasLiked(session["user"], m) %>
+					<div>Likes: <%= m.likes %> </div>
+				<% else %>
+					<div>Likes: <%= m.likes %> <img src="Img/Like.png" class="like" data-target="<%= m.id %>" onclick="like(event)" style="width:12px;"></img></div>
+				<% end %>
+			</div>
+		<% end %>
+	</div>
+	<hr style="clear:left">
+</div>
+
+<script>
+	function like(e){
+		var json = {"id":e.target.dataset.target};
+		sendRequest("/like", json);
+		e.target.style.display = "none";
+	}
+</script>

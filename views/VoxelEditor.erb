@@ -1,0 +1,423 @@
+<html>
+	<head>
+		<link rel="shortcut icon" href="/Pics/Icon.ico" />
+		<script src="/js/three.min.js"></script>
+		<script src="/js/loaders/JSONLoader.js"></script>
+		<script src="/js/loaders/TextureLoader.js"></script>
+		<script src="/js/exporter/GeometryExporter.js"></script>
+		<script src="/scripts/graphics.js" type="text/javascript"></script>
+		<script src="/scripts/cameraMove.js" type="text/javascript"></script>
+		<script src="/scripts/modelCreator.js" type="text/javascript"></script>
+		<script src="/scripts/SaveLoadModel.js" type="text/javascript"></script>
+		<script src="/js/jscolor/jscolor.js" type="text/javascript"></script>
+		<style>canvas { width: 100%; height: 100%;}</style>
+	</head>
+	<body style="margin:0px; padding:0px;">				
+		<div id="scene" style="float:left; width:88%;" onclick="Test()">
+		
+		</div>
+		<div id="toolbar" class="window" style="position:fixed; right:0px; width:18%;">
+			<label for="name">Name:</label><input id="name" value="untitled" onfocus="disableMove()" onblur="enableMove()"></input><br>
+			<input id="colorPicker" class="color" onblur="colorPicked()">
+			<img id="pipette" src="/Pics/PipetteInActive.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Pipette()"></img>
+			<img id="replaceIcon" src="/Pics/Replace.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Replace()"></img>
+			<img id="cubeMode" src="/Pics/Cube.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="CubeMode()"></img>
+			<img id="double" src="/Pics/Double.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Double()"></img>
+			<img id="revert" src="/Pics/Revert.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="revertAction()"></img>
+			<img id="revert" src="/Pics/Forward.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="forwardAction()"></img>
+			<br>
+			<div id="replace" style="display:none;">
+				<input id="replacePicker" class="color" onblur="replacePicked()">
+			</div>
+			<br>
+			<button id="safeButton" onclick="safe()">Save</button>
+			<button id="loadButton" onclick="load()">Load</button>
+			<button id="loadButton" onclick="exportModel()">Export</button>
+			<button id="resetButton" onclick="reset()" style="float:right; margin-right:5px;">Reset</button><br>
+			<textarea id="safeCode" style="width:95%; height:200px;" align="top" onfocus="this.select()">
+			
+			</textarea>
+		</div>
+	</body>	
+	
+	<!-- Shader -->
+	<script id="2d-vertex-shader" type="x-shader/x-vertex">
+	uniform vec4 myCcolor;
+	varying vec2 vUv;
+
+	void main() {
+	  vUv = uv;
+	  gl_Position = projectionMatrix *
+                  modelViewMatrix *
+                  vec4(position,1.0);
+	}
+	</script>
+
+	<script id="2d-fragment-shader" type="x-shader/x-fragment">
+	uniform vec3 myColor;
+	varying vec2 vUv;
+	void main() {
+		if(vUv[0] < 0.025 || vUv[1] < 0.025 || vUv[0] > 0.975 || vUv[1] > 0.975){
+			gl_FragColor = vec4(myColor - vec3(0.2,0.2,0.2), 1.0);
+		}else{
+			gl_FragColor = vec4(myColor, 1.0);  // color
+		}
+	}
+	</script>
+	
+	<script>
+		var blocks = {};
+		var colors = {};
+		var pipette = false;
+		var replace = false;
+		var cubeMode = false;
+		var cubeModeSelections = [];
+		var actions = [];
+		var actionCounter = 0;
+		var toReplace;
+		var center = new THREE.Vector3(0,0,0);
+		var color = parseInt(document.getElementById("colorPicker").value, 16);
+		var replace = parseInt(document.getElementById("replacePicker").value, 16);
+		var imageData;
+		var getImageData = true;
+		var scene = new THREE.Scene();
+		var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		var renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: false});
+		renderer.setClearColor( 0xD7F1F8, 1);		
+		
+		var allGeometry = new THREE.BoxGeometry(1,1,1);
+		for(var i =-5; i <= 5; i++){
+			for(var h = -5; h <= 5; h++){
+				makeBlock(i,h,0, 0x333333);
+			}
+		}
+		
+		var projector = new THREE.Projector();
+		var intersected;
+
+		renderer.setSize( window.innerWidth *0.8, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+		
+		camera.position.z = 5;
+		camera.lookAt(new THREE.Vector3(0,10,0));
+		camera.useQuaternion = true;
+		camera.up = new THREE.Vector3(0,0,1);
+		
+		var manager = new THREE.LoadingManager();
+		var loader = new THREE.JSONLoader( manager );
+		
+		function render() { 
+			requestAnimationFrame(render);
+			renderer.render(scene, camera);
+			if(getImageData == true){
+				imgData = renderer.domElement.toDataURL();
+				getImageData = false;
+			}
+		} 
+		render();
+	</script>
+	<script>		
+		function ClickCheck(event){
+			
+			var x = ( ( event.clientX - renderer.domElement.offsetLeft ) / renderer.domElement.width ) * 2 - 1;
+			var y = - ( ( event.clientY - renderer.domElement.offsetTop ) / renderer.domElement.height ) * 2 + 1;
+			var vector = new THREE.Vector3(x, y, 0.5);
+
+			var rayCaster = projector.pickingRay(vector, camera);
+
+			var intersections = rayCaster.intersectObjects(scene.children, true);
+			
+			if ( intersections.length > 0 ) {
+				if ( intersected != intersections[ 0 ].object ) {
+					var n = intersections[0].face.normal;
+					var x = Math.floor(intersections[0].object.position.x)
+					var y = Math.floor(intersections[0].object.position.y)
+					var z = Math.floor(intersections[0].object.position.z)
+					
+					//console.debug("Clicked: " + x + ", " + y + ", " + z);
+					//console.debug("Normal: " + intersections[0].face.normal.x + ", " + intersections[0].face.normal.y + ", " + intersections[0].face.normal.z);
+					if(pipette == true){
+						if(colors[[x,y,z]] != null){
+							color = colors[[x,y,z]];
+							document.getElementById("colorPicker").value = color.toString(16);
+							document.getElementById("colorPicker").focus();	
+							document.getElementById("colorPicker").blur();	
+							pipette = false;
+							document.getElementById("pipette").src = "Pics/PipetteInActive.png";
+						}
+					}else if(cubeMode == true){
+						if(cubeModeSelections.length < 2){
+							cubeModeSelections.push(intersections[0].object.position);
+							//console.debug("added");
+						}else{
+							cubeModeSelections.push(intersections[0].object.position);
+							var cm = cubeModeSelections;
+							var xmin = [1000,-1000];
+							var ymin = [1000,-1000];
+							var zmin = [1000,-1000];
+							for(var i = 0; i < cm.length; i++){
+								if(cm[i].x < xmin[0]){
+									xmin[0] = cm[i].x;
+								}
+								if(cm[i].x > xmin[1]){
+									xmin[1] = cm[i].x;
+								}
+								if(cm[i].y < ymin[0]){
+									ymin[0] = cm[i].y;
+								}
+								if(cm[i].y > ymin[1]){
+									ymin[1] = cm[i].y;
+								}
+								if(cm[i].z < zmin[0]){
+									zmin[0] = cm[i].z;
+								}
+								if(cm[i].z > zmin[1]){
+									zmin[1] = cm[i].z;
+								}
+							}
+							for(var dx = xmin[0]; dx <= xmin[1]; dx++){
+								for(var dy = ymin[0]; dy <= ymin[1]; dy++){
+									for(var dz = zmin[0]; dz <= zmin[1]; dz++){
+										addBlock(dx,dy,dz, color);
+									}
+								}
+							}
+							actionPerformed();
+							CubeMode();
+						}
+					}else{
+						x += n.x;
+						y += n.y;
+						z += n.z;		
+						addBlock(x,y,z, color);
+						actionPerformed();
+					}
+					center = new THREE.Vector3(x,y,z);
+				}
+			}
+		}
+		
+		function RightClickCheck(event){
+			actionPerformed()
+			event.preventDefault();
+			var x = ( ( event.clientX - renderer.domElement.offsetLeft ) / renderer.domElement.width ) * 2 - 1;
+			var y = - ( ( event.clientY - renderer.domElement.offsetTop ) / renderer.domElement.height ) * 2 + 1;
+			var vector = new THREE.Vector3(x, y, 0.5);
+
+			var rayCaster = projector.pickingRay(vector, camera);
+
+			var intersections = rayCaster.intersectObjects(scene.children, true);
+			
+			if ( intersections.length > 0 ) {
+				if ( intersected != intersections[ 0 ].object ) {
+					var x = intersections[0].object.position.x;
+					var y = intersections[0].object.position.y;
+					var z = intersections[0].object.position.z;
+					//console.debug("Clicked: " + x + ", " + y + ", " + z);
+					removeBlock(x,y,z);
+					actionPerformed()
+				}
+			}
+		}
+	</script>
+	<script>
+		document.body.onclick = function(event){ClickCheck(event);};
+		document.body.addEventListener('contextmenu', function(ev){RightClickCheck(ev);});
+		CalcRotation();
+		camera.lookAt(new THREE.Vector3(0,0,0));
+		
+		window.addEventListener( 'resize', onWindowResize, false );
+		
+		function addBlock(x,y,z,c){
+			if(blocks[[x,y,z]] == null){
+				blocks[[x,y,z]] = makeBlock(x,y,z, c);	
+				colors[[x,y,z]] = c;	
+			}
+		}
+		
+		function removeBlock(x,y,z){
+			var block = blocks[[x,y,z]];				
+			scene.remove(block);
+			blocks[[x,y,z]] = null;
+			colors[[x,y,z]] = null;
+		}
+		
+		function onWindowResize( e ) {
+			var containerWidth = window.innerWidth *0.8;
+			var containerHeight = window.innerHeight;
+			renderer.setSize(containerWidth, containerHeight  );
+			camera.aspect = containerWidth / containerHeight;
+			camera.updateProjectionMatrix();
+		}
+		
+		function colorPicked(){
+			color = parseInt(document.getElementById("colorPicker").value, 16);
+			//console.debug(color);
+		}
+		function replacePicked(){
+			replace = parseInt(document.getElementById("replacePicker").value, 16);
+			var keys = toReplace;
+			for(var i = 0; i < keys.length; i++){
+				colors[keys[i]] = replace;
+				var k = keys[i].split(",");
+				removeBlock(k[0], k[1], k[2]);					
+				addBlock(k[0], k[1], k[2], replace);					
+			}
+			actionPerformed();
+		}
+		
+		function getBlock(x,y,z){
+			return blocks[x + "," + y + "," + z]
+		}
+		
+		function actionPerformed(){
+			if(actionCounter < actions.length -1){
+				actions.splice(actionCounter +1, actions.length);
+			}
+			actions.push(autoSafe());
+			actionCounter = actions.length -1;
+			if(actions.length >= 15){
+				actions.shift();
+			}
+		}
+		
+		function revertAction(){
+			actionCounter -= 1;
+			if(actionCounter >= 0){
+				autoLoad(actions[actionCounter]);
+			}else{
+				actionCounter = 0;
+			}
+		}
+		
+		function forwardAction(){
+			actionCounter += 1;
+			if(actionCounter < actions.length){
+				autoLoad(actions[actionCounter]);
+			}else{
+				actionCounter = actions.length;
+			}
+		}
+		
+		function Pipette(){
+			if(pipette == true){
+				pipette = false;
+				document.getElementById("pipette").src = "Pics/PipetteInActive.png";
+			}else{
+				pipette = true;
+				document.getElementById("pipette").src = "Pics/PipetteActive.png";
+			}
+		}
+		
+		function Replace(){
+			if(replace == false){
+				document.getElementById("replace").style.display = "block";
+				replace = true;
+				toReplace = [];
+				var keys = Object.keys(blocks);
+				for(var i = 0; i < keys.length; i++){
+					if(colors[keys[i]] == color){
+						toReplace.push(keys[i]);
+					}
+				}
+			}else{
+				replace = false;
+				document.getElementById("replace").style.display = "none";
+			}
+		}
+		
+		function CubeMode(){
+			if(cubeMode == false){
+				cubeMode = true;
+				cubeModeSelections = [];
+				document.getElementById("cubeMode").src = "Pics/CubeActive.png";
+			}else{
+				cubeMode = false;
+				document.getElementById("cubeMode").src = "Pics/Cube.png";
+			}
+		}
+		
+		function Double(){
+			var newAr = {}
+			var keys = Object.keys(blocks);
+			for(var i = 0; i < keys.length; i++){
+				if(colors[keys[i]] != null){
+					var ar = keys[i].split(",");
+					ar[0] = ar[0]*2;
+					ar[1] = ar[1]*2;
+					ar[2] = ar[2]*2;
+					newAr[[parseInt(ar[0]) - 0, parseInt(ar[1]) - 0, parseInt(ar[2]) - 0]] = colors[keys[i]];
+					newAr[[parseInt(ar[0]) - 1, parseInt(ar[1]) - 0, parseInt(ar[2]) - 0]] = colors[keys[i]];
+					newAr[[parseInt(ar[0]) - 0, parseInt(ar[1]) - 1, parseInt(ar[2]) - 0]] = colors[keys[i]];
+					newAr[[parseInt(ar[0]) - 1, parseInt(ar[1]) - 1, parseInt(ar[2]) - 0]] = colors[keys[i]];
+					
+					newAr[[parseInt(ar[0]) - 0, parseInt(ar[1]) - 0, parseInt(ar[2]) - 1]] = colors[keys[i]];
+					newAr[[parseInt(ar[0]) - 1, parseInt(ar[1]) - 0, parseInt(ar[2]) - 1]] = colors[keys[i]];
+					newAr[[parseInt(ar[0]) - 0, parseInt(ar[1]) - 1, parseInt(ar[2]) - 1]] = colors[keys[i]];
+					newAr[[parseInt(ar[0]) - 1, parseInt(ar[1]) - 1, parseInt(ar[2]) - 1]] = colors[keys[i]];
+				}
+			}
+			reset();
+			//console.debug(newAr);
+			var keys = Object.keys(newAr);
+			for(var i = 0; i < keys.length; i++){
+				var ar = keys[i].split(",");
+				addBlock(ar[0], ar[1], ar[2], newAr[keys[i]]);
+			}
+			actionPerformed();
+		}
+	</script>
+	<script>
+		function moveAllBlocks(vector){
+			var newAr = {}
+			var keys = Object.keys(blocks);
+			for(var i = 0; i < keys.length; i++){
+				if(colors[keys[i]] != null){
+					var ar = keys[i].split(",");
+					newAr[[parseInt(ar[0]) + vector[0], parseInt(ar[1]) + vector[1], parseInt(ar[2]) + vector[2]]] = colors[keys[i]];
+				}
+			}
+			reset();
+			//console.debug(newAr);
+			var keys = Object.keys(newAr);
+			for(var i = 0; i < keys.length; i++){
+				var ar = keys[i].split(",");
+				addBlock(ar[0], ar[1], ar[2], newAr[keys[i]]);
+			}
+			actionPerformed();
+		}
+	</script>
+	<script>
+		function getFace(Vec1, Vec2){
+			camera.position.x = Vec1.x;
+			camera.position.y = Vec1.y;
+			camera.position.z = Vec1.z;
+			camera.lookAt(Vec2);
+			
+			var x = 0;
+			var y = -0;
+			var vector = new THREE.Vector3(x, y, 0.5);
+			
+			var rayCaster = projector.pickingRay(vector, camera);
+			var intersections = rayCaster.intersectObjects(scene.children, true);
+			
+			if ( intersections.length > 0 ) {
+				if ( intersected != intersections[ 0 ].object ) {
+					var n = intersections[0].object.position;
+					return n;
+				}
+			}
+		}
+		function exportToJson(){
+			var a = getFace(new THREE.Vector3(10,0,1), new THREE.Vector3(-0.5,0,1));
+			console.debug(a);
+		}
+	</script>
+	<script>
+		var modelId = "null";
+		autoLoad("<%= @load.split("\n").join("\\n") %>");
+		<% if params[:id] %>
+			 modelId = <%= params[:id] %>;
+		<% end %>
+	</script>
+</html>

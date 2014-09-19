@@ -1,0 +1,8 @@
+<div id="sub2" class="sub2">
+	<h2>Meine Models</h2>
+	<div>
+		<% @models.each do |m| %>
+			<a href="/VoxelEditor/<%= m.id %>"><img src="<%= m.picture %>" style="width:200px;"></img></a>
+		<% end %>
+	</div>
+</div>
