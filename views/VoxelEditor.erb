@@ -197,7 +197,7 @@
 						addBlock(x,y,z, color);
 						actionPerformed();
 					}
-					center = new THREE.Vector3(x,y,z);
+					//center = new THREE.Vector3(x,y,z);
 				}
 			}
 		}
@@ -226,7 +226,9 @@
 		}
 	</script>
 	<script>
-		document.body.onclick = function(event){ClickCheck(event);};
+		document.body.onmousedown = function(event){CamMove(event);};
+		document.body.onmouseup = function(event){CamStopMove(event);};
+		document.body.addEventListener('mousemove', function(event){CalcDeltaPos(event);});
 		document.body.addEventListener('contextmenu', function(ev){RightClickCheck(ev);});
 		CalcRotation();
 		camera.lookAt(new THREE.Vector3(0,0,0));
