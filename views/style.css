@@ -13,6 +13,15 @@ html, body{
 #main{
 }
 
+.colorBox{
+	margin:5px;
+	background-color:red;
+	width:20px;
+	height:20px;
+	cursor:pointer;
+	float:left;
+}
+
 .sub1{
 	margin-left:20%;
 	margin-top:20px;
