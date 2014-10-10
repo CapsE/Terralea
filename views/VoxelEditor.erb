@@ -38,7 +38,7 @@
 			<div id="colors" width="100%" height="400px" class="window" style="padding:0px; border-width:0.5px;">
 				<div id="colorField" class="colorBox" style="display:none;" onclick="colorClicked(event)"></div>
 			</div>
-			<textarea id="safeCode" style="width:95%; height:200px; display:none;" align="top" onfocus="this.select()">
+			<textarea id="safeCode" style="width:95%; height:200px; display:block;" align="top" onfocus="this.select()">
 			
 			</textarea>
 		</div>
@@ -86,21 +86,21 @@
 		var imageData;
 		var getImageData = true;
 		var scene = new THREE.Scene();
-		var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		var camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		var renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: false});
-		renderer.setClearColor( 0xD7F1F8, 1);		
+		renderer.setClearColor( 0xFFFFFF, 1);		
 		
 		var allGeometry = new THREE.BoxGeometry(1,1,1);
 		for(var i =-5; i <= 5; i++){
 			for(var h = -5; h <= 5; h++){
-				makeBlock(i,h,0, 0x333333);
+				makeBlock(i,h,0, 0x99B2B7);
 			}
 		}
 		
 		var projector = new THREE.Projector();
 		var intersected;
 
-		renderer.setSize( window.innerWidth *0.8, window.innerHeight );
+		renderer.setSize( window.innerWidth, window.innerHeight );
 		document.body.appendChild( renderer.domElement );
 		
 		camera.position.z = 5;
@@ -120,6 +120,11 @@
 			}
 		} 
 		render();
+		
+		var geometry = new THREE.CubeGeometry( 1, 1, 1 );
+		var material = new THREE.MeshBasicMaterial( { color: color, wireframe: true } );
+		var previewCube = new THREE.Mesh( geometry, material );
+		scene.add( previewCube );
 	</script>
 	<script>		
 		function ClickCheck(event){
@@ -191,9 +196,10 @@
 							CubeMode();
 						}
 					}else{
-						x += n.x;
-						y += n.y;
-						z += n.z;		
+						var p = previewCube.position;
+						x = p.x;
+						y = p.y;
+						z = p.z;		
 						addBlock(x,y,z, color);
 						actionPerformed();
 					}
@@ -215,9 +221,14 @@
 			
 			if ( intersections.length > 0 ) {
 				if ( intersected != intersections[ 0 ].object ) {
-					var x = intersections[0].object.position.x;
-					var y = intersections[0].object.position.y;
-					var z = intersections[0].object.position.z;
+					if(intersections[0].object == previewCube){
+						var toDelete = intersections[1];
+					}else{
+						var toDelete = intersections[0];
+					}
+					var x = toDelete.object.position.x;
+					var y = toDelete.object.position.y;
+					var z = toDelete.object.position.z;
 					//console.debug("Clicked: " + x + ", " + y + ", " + z);
 					removeBlock(x,y,z);
 					actionPerformed()
@@ -230,6 +241,18 @@
 		document.body.onmouseup = function(event){CamStopMove(event);};
 		document.body.addEventListener('mousemove', function(event){CalcDeltaPos(event);});
 		document.body.addEventListener('contextmenu', function(ev){RightClickCheck(ev);});
+		
+		if (document.body.addEventListener) {
+			// IE9, Chrome, Safari, Opera
+			document.body.addEventListener("mousewheel", MouseWheelHandler, false);
+			// Firefox
+			document.body.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
+		}
+		// IE 6/7/8
+		else{
+			document.body.attachEvent("onmousewheel", MouseWheelHandler);
+		}
+
 		CalcRotation();
 		camera.lookAt(new THREE.Vector3(0,0,0));
 		
@@ -248,6 +271,29 @@
 					palette.appendChild(colorField);
 					usedColors[c] = c;
 					console.debug(c);
+				}
+			}
+		}
+		
+		function PreviewBlock(event){
+			var x = ( ( event.clientX - renderer.domElement.offsetLeft ) / renderer.domElement.width ) * 2 - 1;
+			var y = - ( ( event.clientY - renderer.domElement.offsetTop ) / renderer.domElement.height ) * 2 + 1;
+			var vector = new THREE.Vector3(x, y, 0.5);
+
+			var rayCaster = projector.pickingRay(vector, camera);
+
+			var intersections = rayCaster.intersectObjects(scene.children, true);
+			
+			if ( intersections.length > 0 ) {
+				if ( intersected != intersections[ 0 ].object && intersections[0].object != previewCube ) {
+					var n = intersections[0].face.normal;
+					var x = Math.floor(intersections[0].object.position.x)
+					var y = Math.floor(intersections[0].object.position.y)
+					var z = Math.floor(intersections[0].object.position.z)
+					x += n.x;
+					y += n.y;
+					z += n.z;
+					previewCube.position = new THREE.Vector3(x,y,z);
 				}
 			}
 		}
@@ -277,6 +323,7 @@
 		
 		function colorPicked(){
 			color = parseInt(document.getElementById("colorPicker").value, 16);
+			previewCube.material.color.setHex(color);
 			//console.debug(color);
 		}
 		function replacePicked(){

@@ -2,6 +2,7 @@ var rotation = 0;
 var radius = 10;
 var topRotation = 0.5;
 var moveEnabled = true;
+var offset = new THREE.Vector3(0,0,0);
 
 document.onkeydown = checkKey;
 function checkKey(e) {
@@ -71,6 +72,8 @@ function CalcRotation(){
 	camera.position.x = Math.cos(rotation) * nradius;
 	camera.position.y = Math.sin(rotation) * nradius;
 	camera.position.z = Math.sin(topRotation) * radius;
+	camera.position.z += center.z;
+	//camera.position.y += center.y;
 }
 
 function disableMove(){
@@ -85,12 +88,17 @@ function enableMove(){
 var oldPos = [0,0];
 var deltaPos = [0,0];
 var cameraMoving = false;
+var centerMoving = false;
 var time = false;
 
 function CamMove(e){
 	if(e.which == 1){
 		time = true;
 		window.setTimeout("startMove()", 160);
+	}else if(e.which = 2){
+		centerMoving = true;
+	}else if(e.which = 3){
+		centerMoving = false;
 	}
 }
 
@@ -112,10 +120,15 @@ function CamStopMove(e){
 		cameraMoving = false;
 		time = false;
 		document.body.style.cursor = "default";
+	}else if(e.which == 2){
+		centerMoving = false;
+	}else if(e.which = 3){
+		centerMoving = false;
 	}
 }
 
 function CalcDeltaPos(e){
+	PreviewBlock(e);
 	var x = e.clientX || e.pageX; 
     var y = e.clientY || e.pageY;
 	deltaPos[0] = oldPos[0] - x;
@@ -133,4 +146,21 @@ function CalcDeltaPos(e){
 		CalcRotation();
 		camera.lookAt(center);
 	}
+	if(centerMoving == true){
+		center.z += deltaPos[1]/20;
+		//center.y += deltaPos[0]/20;
+		CalcRotation();
+		camera.lookAt(center);
+	}
+}
+
+function MouseWheelHandler(e) {
+
+	// cross-browser wheel delta
+	var e = window.event || e; // old IE support
+	var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+
+	radius -= delta;
+	CalcRotation();
+	return false;
 }
