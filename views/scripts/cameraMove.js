@@ -92,18 +92,20 @@ var centerMoving = false;
 var time = false;
 
 function CamMove(e){
-	if(e.which == 1){
-		time = true;
-		window.setTimeout("startMove()", 160);
-	}else if(e.which = 2){
-		centerMoving = true;
-	}else if(e.which = 3){
-		centerMoving = false;
+	if(pickingColor == false){
+		if(e.which == 1){
+			time = true;
+			window.setTimeout("startMove()", 160);
+		}else if(e.which = 2){
+			centerMoving = true;
+		}else if(e.which = 3){
+			centerMoving = false;
+		}
 	}
 }
 
 function startMove(e){
-	if(time == true){
+	if(time == true && pickingColor == false){
 		cameraMoving = true;
 		document.body.style.cursor = "move";
 		time = false;

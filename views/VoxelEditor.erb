@@ -19,7 +19,7 @@
 		</div>
 		<div id="toolbar" class="window" style="position:fixed; right:0px; width:18%;">
 			<label for="name">Name:</label><input id="name" value="untitled" onfocus="disableMove()" onblur="enableMove()"></input><br>
-			<input id="colorPicker" class="color" onblur="colorPicked()">
+			<input id="colorPicker" class="color" onblur="colorPicked()" onclick="PickingColor()">
 			<img id="pipette" src="Pics/PipetteInActive.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Pipette()"></img>
 			<img id="repaint" src="Pics/tool_brush.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Repaint()"></img>
 			<img id="replaceIcon" src="Pics/Replace.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Replace()"></img>
@@ -78,6 +78,7 @@
 		var replace = false;
 		var repaint = false;
 		var cubeMode = false;
+		var pickingColor = false;
 		var cubeModeSelections = [];
 		var actions = [];
 		var actionCounter = 0;
@@ -328,9 +329,14 @@
 			console.debug(c);
 		}
 		
+		function PickingColor(){
+			pickingColor = true;
+		}
+		
 		function colorPicked(){
 			color = parseInt(document.getElementById("colorPicker").value, 16);
 			previewCube.material.color.setHex(color);
+			pickingColor = false;
 			//console.debug(color);
 		}
 		function replacePicked(){
