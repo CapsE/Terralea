@@ -21,6 +21,7 @@
 			<label for="name">Name:</label><input id="name" value="untitled" onfocus="disableMove()" onblur="enableMove()"></input><br>
 			<input id="colorPicker" class="color" onblur="colorPicked()">
 			<img id="pipette" src="Pics/PipetteInActive.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Pipette()"></img>
+			<img id="repaint" src="Pics/tool_brush.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Repaint()"></img>
 			<img id="replaceIcon" src="Pics/Replace.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Replace()"></img>
 			<img id="cubeMode" src="Pics/Cube.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="CubeMode()"></img>
 			<img id="double" src="Pics/Double.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Double()"></img>
@@ -75,6 +76,7 @@
 		var usedColors = {};
 		var pipette = false;
 		var replace = false;
+		var repaint = false;
 		var cubeMode = false;
 		var cubeModeSelections = [];
 		var actions = [];
@@ -155,6 +157,9 @@
 							pipette = false;
 							document.getElementById("pipette").src = "Pics/PipetteInActive.png";
 						}
+					}else if(repaint == true){
+						removeBlock(x,y,z);
+						addBlock(x,y,z, color);
 					}else if(cubeMode == true){
 						if(cubeModeSelections.length < 2){
 							cubeModeSelections.push(intersections[0].object.position);
@@ -290,9 +295,11 @@
 					var x = Math.floor(intersections[0].object.position.x)
 					var y = Math.floor(intersections[0].object.position.y)
 					var z = Math.floor(intersections[0].object.position.z)
-					x += n.x;
-					y += n.y;
-					z += n.z;
+					if(repaint == false){
+						x += n.x;
+						y += n.y;
+						z += n.z;
+					}
 					previewCube.position = new THREE.Vector3(x,y,z);
 				}
 			}
@@ -379,6 +386,17 @@
 				pipette = true;
 				document.getElementById("pipette").src = "Pics/PipetteActive.png";
 			}
+		}
+		
+		function Repaint(){
+			if(repaint == true){
+				repaint = false;
+				document.getElementById("repaint").src = "Pics/tool_brush.png";
+			}else{
+				repaint = true;
+				document.getElementById("repaint").src = "Pics/tool_brush_hl.png";
+			}
+			
 		}
 		
 		function Replace(){
