@@ -76,10 +76,9 @@ html, body{
 }
 
 .window{
-	padding:20px; 
+	padding:5px; 
 	margin:10px;
 	border:solid;
-	border-radius:5px;
-	border-color:rgba(1,1,1,0.1); 
+	border-color:#99B2B7; 
 	background-color:white;
 }
