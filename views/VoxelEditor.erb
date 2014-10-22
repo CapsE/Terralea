@@ -13,8 +13,12 @@
 		<script src="js/jscolor/jscolor.js" type="text/javascript"></script>
 		<style>canvas { width: 100%; height: 100%;}</style>
 	</head>
-	<body style="margin:0px; padding:0px;">				
-		<div id="scene" style="float:left; width:88%;" onclick="Test()">
+	<body style="margin:0px; padding:0px;">		
+		<div id="imageViewHolder" class="window" style="display:none; position:fixed; z-index:100; width:80%; left:10%;">
+			<img id="imageView" src="icons/t_pipette.png" style="width:100%;"></img>
+			<img id="imageViewClose" src="icons/redo.png" style="position:absolute; right:0px; top:0px; cursor:pointer; z-index:101;" onclick="closeScreenshot()"></img>
+		</div>
+		<div id="scene" style="float:left; width:100%;" onclick="Test()">
 		
 		</div>
 		<div id="toolbar" class="window" style="position:fixed; right:0px; width:18%;">
@@ -35,6 +39,7 @@
 			<button id="safeButton" onclick="safe()">Save</button>
 			<button id="loadButton" onclick="load()">Load</button>
 			<button id="loadButton" onclick="exportModel()">Export</button>
+			<button id="screenshotButton" onclick="screenShot()">Screenshot</button>
 			<button id="resetButton" onclick="reset()" style="float:right; margin-right:5px;">Reset</button><br>
 			<div id="colors" width="100%" height="400px" class="window" style="padding:0px; border-width:0.5px;">
 				<div id="colorField" class="colorBox" style="display:none;" onclick="colorClicked(event)"></div>
@@ -129,7 +134,20 @@
 		var previewCube = new THREE.Mesh( geometry, material );
 		scene.add( previewCube );
 	</script>
-	<script>		
+	<script>	
+		function screenShot(){
+			previewCube.visible = false;
+			getImageData = true;
+			render();
+			document.getElementById("imageViewHolder").style.display = "block";
+			document.getElementById("imageView").src = imgData;
+			previewCube.visible = true;
+		}
+		
+		function closeScreenshot(){
+			document.getElementById("imageViewHolder").style.display = "none";
+		}
+		
 		function ClickCheck(event){
 			
 			var x = ( ( event.clientX - renderer.domElement.offsetLeft ) / renderer.domElement.width ) * 2 - 1;
@@ -243,20 +261,20 @@
 		}
 	</script>
 	<script>
-		document.body.onmousedown = function(event){CamMove(event);};
-		document.body.onmouseup = function(event){CamStopMove(event);};
-		document.body.addEventListener('mousemove', function(event){CalcDeltaPos(event);});
-		document.body.addEventListener('contextmenu', function(ev){RightClickCheck(ev);});
+		renderer.domElement.onmousedown = function(event){CamMove(event);};
+		renderer.domElement.onmouseup = function(event){CamStopMove(event);};
+		renderer.domElement.addEventListener('mousemove', function(event){CalcDeltaPos(event);});
+		renderer.domElement.addEventListener('contextmenu', function(ev){RightClickCheck(ev);});
 		
-		if (document.body.addEventListener) {
+		if (renderer.domElement.addEventListener) {
 			// IE9, Chrome, Safari, Opera
-			document.body.addEventListener("mousewheel", MouseWheelHandler, false);
+			renderer.domElement.addEventListener("mousewheel", MouseWheelHandler, false);
 			// Firefox
-			document.body.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
+			renderer.domElement.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
 		}
 		// IE 6/7/8
 		else{
-			document.body.attachEvent("onmousewheel", MouseWheelHandler);
+			renderer.domElement.attachEvent("onmousewheel", MouseWheelHandler);
 		}
 
 		CalcRotation();
