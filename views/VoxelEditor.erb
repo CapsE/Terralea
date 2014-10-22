@@ -269,6 +269,9 @@
 				blocks[[x,y,z]] = makeBlock(x,y,z, c);	
 				colors[[x,y,z]] = c;
 				c = c.toString(16);
+				while(c.length < 6){
+					c = "0" + c;
+				}
 				if(usedColors[c] == null){
 					var palette = document.getElementById("colors");
 					var colorField = document.getElementById("colorField").cloneNode(false);
@@ -296,7 +299,7 @@
 					var x = Math.floor(intersections[0].object.position.x)
 					var y = Math.floor(intersections[0].object.position.y)
 					var z = Math.floor(intersections[0].object.position.z)
-					if(repaint == false){
+					if(repaint == false && pipette == false){
 						x += n.x;
 						y += n.y;
 						z += n.z;
