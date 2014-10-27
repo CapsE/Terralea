@@ -21,6 +21,18 @@
 		<div id="scene" style="float:left; width:100%;" onclick="Test()">
 		
 		</div>
+		<div id="timeline" style="position:fixed; top:10px; left:44%; width:12%;">
+			<div id="timeElement0" class="timeElement" data-i="0" data-active="false" onclick="timeLineClick(event)"></div>
+			<div id="timeElement1" class="timeElement" data-i="1" data-active="false" onclick="timeLineClick(event)"></div>
+			<div id="timeElement2" class="timeElement" data-i="2" data-active="false" onclick="timeLineClick(event)"></div>
+			<div id="timeElement3" class="timeElement" data-i="3" data-active="false" onclick="timeLineClick(event)"></div>
+			<div id="timeElement4" class="timeElement" data-i="4" data-active="false" onclick="timeLineClick(event)"></div>
+			<div id="timeElement5" class="timeElement" data-i="5" data-active="false" onclick="timeLineClick(event)"></div>
+			<div id="timeElement6" class="timeElement" data-i="6" data-active="false" onclick="timeLineClick(event)"></div>
+			<div id="timeElement7" class="timeElement" data-i="7" data-active="false" onclick="timeLineClick(event)"></div>
+			<div id="timeElement8" class="timeElement" data-i="8" data-active="false" onclick="timeLineClick(event)"></div>
+			<div id="timeElement9" class="timeElement" data-i="9" data-active="false" onclick="timeLineClick(event)"></div>
+		</div>
 		<div id="toolbar" class="window" style="position:fixed; right:0px; width:18%;">
 			<label for="name">Name:</label><input id="name" value="untitled" onfocus="disableMove()" onblur="enableMove()"></input><br>
 			<input id="colorPicker" class="color" onblur="colorPicked()" onclick="PickingColor()">
@@ -135,6 +147,21 @@
 		scene.add( previewCube );
 	</script>
 	<script>	
+		function timeLineClick(e){
+			var te = e.target;
+			var c = parseInt(te.dataset.i)
+			if(te.dataset.active == "true"){
+				for(var i = 0; i < 10; i++){
+					if(i > c){
+						document.getElementById("timeElement" + i).style.backgroundColor = "white";
+					}else{
+						document.getElementById("timeElement" + i).style.backgroundColor = "blue";
+					}
+				}
+				autoLoad(actions[c]);
+			}
+		}
+		
 		function screenShot(){
 			previewCube.visible = false;
 			getImageData = true;
@@ -382,7 +409,10 @@
 			}
 			actions.push(autoSafe());
 			actionCounter = actions.length -1;
-			if(actions.length >= 15){
+			var te = document.getElementById("timeElement" + actionCounter)
+			te.style.backgroundColor = "blue";
+			te.dataset.active = true;
+			if(actions.length >= 10){
 				actions.shift();
 			}
 		}

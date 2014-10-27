@@ -82,3 +82,13 @@ html, body{
 	border-color:#99B2B7; 
 	background-color:white;
 }
+
+.timeElement{
+	width:10px;
+	height:10px;
+	cursor:pointer;
+	margin:5px;
+	float:left;
+	border:solid;
+	border-width:1px;
+}
