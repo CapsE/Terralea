@@ -38,6 +38,13 @@ html, body{
 	vertical-align:middle;
 }
 
+.icon{
+	width:40px;
+	height:40px;
+	position:relative;
+	top:5px;
+}
+
 .menuItemText{
 	display:inline-block;
 	vertical-align:middle;

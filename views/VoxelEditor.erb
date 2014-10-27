@@ -34,15 +34,15 @@
 			<div id="timeElement9" class="timeElement" data-i="9" data-active="false" onclick="timeLineClick(event)"></div>
 		</div>
 		<div id="toolbar" class="window" style="position:fixed; right:0px; width:18%;">
-			<label for="name">Name:</label><input id="name" value="untitled" onfocus="disableMove()" onblur="enableMove()"></input><br>
-			<input id="colorPicker" class="color" onblur="colorPicked()" onclick="PickingColor()">
-			<img id="pipette" src="icons/t_pipette.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Pipette()"></img>
-			<img id="repaint" src="icons/tool_brush.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Repaint()"></img>
-			<img id="replaceIcon" src="Pics/Replace.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Replace()"></img>
-			<img id="cubeMode" src="icons/t_block.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="CubeMode()"></img>
-			<img id="double" src="Pics/Double.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="Double()"></img>
-			<img id="revert" src="icons/undo.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="revertAction()"></img>
-			<img id="revert" src="icons/redo.png" style="width:20px; height:20px; position:relative; top:5px;" onclick="forwardAction()"></img>
+			<label for="name">Name:</label><input id="name" value="untitled" onfocus="disableMove()" onblur="enableMove()"></input><br><br>
+			<input id="colorPicker" class="color" onblur="colorPicked()" onclick="PickingColor()"><br>
+			<img id="pipette" src="icons/t_pipette.png" class="icon" onclick="Pipette()"></img>
+			<img id="repaint" src="icons/tool_brush.png" class="icon" onclick="Repaint()"></img>
+			<img id="replaceIcon" src="Pics/Replace.png" class="icon" onclick="Replace()"></img>
+			<img id="cubeMode" src="icons/t_block.png" class="icon" onclick="CubeMode()"></img>
+			<img id="double" src="Pics/Double.png" class="icon" onclick="Double()"></img>
+			<img id="revert" src="icons/undo.png" class="icon" onclick="revertAction()"></img>
+			<img id="revert" src="icons/redo.png" class="icon" onclick="forwardAction()"></img>
 			<br>
 			<div id="replace" style="display:none;">
 				<input id="replacePicker" class="color" onblur="replacePicked()">

@@ -166,6 +166,9 @@ function MouseWheelHandler(e) {
 	var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
 
 	radius -= delta;
+	if(radius < 1){
+		radius = 1;
+	}
 	CalcRotation();
 	return false;
 }
