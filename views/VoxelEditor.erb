@@ -101,7 +101,8 @@
 		var actionCounter = 0;
 		var toReplace;
 		var center = new THREE.Vector3(0,0,0);
-		var color = parseInt(document.getElementById("colorPicker").value, 16);
+		var color = "FF0000";
+		document.getElementById("colorPicker").value = color;
 		var replace = parseInt(document.getElementById("replacePicker").value, 16);
 		var imageData;
 		var getImageData = true;
@@ -145,6 +146,7 @@
 		var material = new THREE.MeshBasicMaterial( { color: color, wireframe: true } );
 		var previewCube = new THREE.Mesh( geometry, material );
 		scene.add( previewCube );
+		
 	</script>
 	<script>	
 		function timeLineClick(e){
@@ -289,9 +291,10 @@
 	</script>
 	<script>
 		renderer.domElement.onmousedown = function(event){CamMove(event);};
-		renderer.domElement.onmouseup = function(event){CamStopMove(event);};
+		document.body.onmouseup = function(event){CamStopMove(event);};
 		renderer.domElement.addEventListener('mousemove', function(event){CalcDeltaPos(event);});
 		renderer.domElement.addEventListener('contextmenu', function(ev){RightClickCheck(ev);});
+		colorPicked();
 		
 		if (renderer.domElement.addEventListener) {
 			// IE9, Chrome, Safari, Opera

@@ -69,8 +69,8 @@ function checkKey(e) {
 
 function CalcRotation(){
 	nradius = Math.cos(topRotation) * radius;
-	camera.position.x = Math.cos(rotation) * nradius;
-	camera.position.y = Math.sin(rotation) * nradius;
+	camera.position.x = Math.cos(rotation) * nradius + center.x;
+	camera.position.y = Math.sin(rotation) * nradius + center.y;
 	camera.position.z = Math.sin(topRotation) * radius;
 	camera.position.z += center.z;
 	//camera.position.y += center.y;
@@ -150,6 +150,9 @@ function CalcDeltaPos(e){
 	}
 	if(centerMoving == true){
 		center.z += deltaPos[1]/20;
+		center.x += Math.sin(-rotation)*deltaPos[0]/20;
+		center.y += Math.cos(-rotation)*deltaPos[0]/20;
+		console.debug(rotation);
 		//center.y += deltaPos[0]/20;
 		CalcRotation();
 		camera.lookAt(center);
