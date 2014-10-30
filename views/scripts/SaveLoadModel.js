@@ -61,7 +61,7 @@
 		}
 		
 		function autoSafe(){
-			var out = "camPos:" + rotation + "," + radius + "," + camera.position.z + "," + center.x + "," + center.y + "," + center.z + "\n";
+			var out = "camPos:" + rotation + "," + radius + "," + camera.position.z + "," + center.x + "," + center.y + "," + center.z + ";\n";
 			var keys = Object.keys(blocks);
 			for(var i = 0; i < keys.length; i++){
 				if(colors[keys[i]] != null){

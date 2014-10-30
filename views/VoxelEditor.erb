@@ -45,7 +45,6 @@
 		</div>
 		
 		<div id="toolbar" class="window" style="position:fixed; right:0px; width:18%;">
-			
 			<input id="colorPicker" class="color" onblur="colorPicked()" onclick="PickingColor()"><br>
 			<img id="add" src="icons/t_add.png" class="icon" ></img> 
 			<img id="erase" src="icons/t_erase.png" class="icon" ></img><br>
@@ -161,20 +160,7 @@
 		
 	</script>
 	<script>	
-		function timeLineClick(e){
-			var te = e.target;
-			var c = parseInt(te.dataset.i)
-			if(te.dataset.active == "true"){
-				for(var i = 0; i < 10; i++){
-					if(i > c){
-						document.getElementById("timeElement" + i).style.backgroundColor = "white";
-					}else{
-						document.getElementById("timeElement" + i).style.backgroundColor = "blue";
-					}
-				}
-				autoLoad(actions[c]);
-			}
-		}
+
 		
 		function screenShot(){
 			previewCube.visible = false;
@@ -221,7 +207,7 @@
 						removeBlock(x,y,z);
 						addBlock(x,y,z, color);
 					}else if(cubeMode == true){
-						if(cubeModeSelections.length < 2){
+						if(cubeModeSelections.length < 1){
 							cubeModeSelections.push(intersections[0].object.position);
 							//console.debug("added");
 						}else{
@@ -274,7 +260,6 @@
 		}
 		
 		function RightClickCheck(event){
-			actionPerformed()
 			event.preventDefault();
 			var x = ( ( event.clientX - renderer.domElement.offsetLeft ) / renderer.domElement.width ) * 2 - 1;
 			var y = - ( ( event.clientY - renderer.domElement.offsetTop ) / renderer.domElement.height ) * 2 + 1;
@@ -417,19 +402,35 @@
 		function getBlock(x,y,z){
 			return blocks[x + "," + y + "," + z]
 		}
+			
+		function timeLineClick(e){
+			var te = e.target;
+			var c = parseInt(te.dataset.i)
+			if(te.dataset.active == "true"){
+				for(var i = 0; i < 10; i++){
+					if(i > c){
+						document.getElementById("timeElement" + i).style.backgroundColor = "white";
+					}else{
+						document.getElementById("timeElement" + i).style.backgroundColor = "blue";
+					}
+				}
+				autoLoad(actions[c]);
+				actionCounter = c;
+			}
+		}
 		
 		function actionPerformed(){
 			if(actionCounter < actions.length -1){
 				actions.splice(actionCounter +1, actions.length);
+			}
+			if(actions.length >= 10){
+				actions.shift();
 			}
 			actions.push(autoSafe());
 			actionCounter = actions.length -1;
 			var te = document.getElementById("timeElement" + actionCounter)
 			te.style.backgroundColor = "blue";
 			te.dataset.active = true;
-			if(actions.length >= 10){
-				actions.shift();
-			}
 		}
 		
 		function revertAction(){
