@@ -408,12 +408,19 @@
 			var c = parseInt(te.dataset.i)
 			if(te.dataset.active == "true"){
 				for(var i = 0; i < 10; i++){
+					element = document.getElementById("timeElement" + i);
 					if(i > c){
-						document.getElementById("timeElement" + i).style.backgroundColor = "white";
+						if(element.dataset.active == "true"){
+							element.style.backgroundColor = "lightblue";
+						}else{
+							element.style.backgroundColor = "white";
+						}
 					}else{
-						document.getElementById("timeElement" + i).style.backgroundColor = "blue";
+						element.style.backgroundColor = "blue";
 					}
+					element.style.borderWidth = "1px";
 				}
+				te.style.borderWidth = "2px";
 				autoLoad(actions[c]);
 				actionCounter = c;
 			}
@@ -428,8 +435,13 @@
 			}
 			actions.push(autoSafe());
 			actionCounter = actions.length -1;
-			var te = document.getElementById("timeElement" + actionCounter)
+			var te = document.getElementById("timeElement" + actionCounter);
+			for(var i = 0; i < 10; i++){
+				element = document.getElementById("timeElement" + i);
+				element.style.borderWidth = "1px";
+			}
 			te.style.backgroundColor = "blue";
+			te.style.borderWidth = "2px";
 			te.dataset.active = true;
 		}
 		
