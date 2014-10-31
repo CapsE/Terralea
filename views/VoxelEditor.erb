@@ -76,6 +76,7 @@
 	<!-- Shader -->
 	<script id="2d-vertex-shader" type="x-shader/x-vertex">
 	uniform vec4 myCcolor;
+	uniform float myTransparenz;
 	varying vec2 vUv;
 
 	void main() {
@@ -88,12 +89,13 @@
 
 	<script id="2d-fragment-shader" type="x-shader/x-fragment">
 	uniform vec3 myColor;
+	uniform float myTransparenz;
 	varying vec2 vUv;
 	void main() {
 		if(vUv[0] < 0.025 || vUv[1] < 0.025 || vUv[0] > 0.975 || vUv[1] > 0.975){
-			gl_FragColor = vec4(myColor - vec3(0.2,0.2,0.2), 1.0);
+			gl_FragColor = vec4(myColor - vec3(0.2,0.2,0.2), myTransparenz);
 		}else{
-			gl_FragColor = vec4(myColor, 1.0);  // color
+			gl_FragColor = vec4(myColor, myTransparenz);  // color
 		}
 	}
 	</script>
@@ -154,11 +156,13 @@
 		render();
 		
 		var geometry = new THREE.CubeGeometry( 1, 1, 1 );
-		var material = new THREE.MeshBasicMaterial( { 	color: color,
-														wireframe: false,
-														transparent: true,
-														opacity: 0.5
-													} );
+		var uniforms = {myColor: { type: "c", value: new THREE.Color( convertHex(color) )}, myTransparenz:{type: "f", value: 0.7}};
+		var material = new THREE.ShaderMaterial({
+			uniforms: uniforms,
+			vertexShader: document.getElementById('2d-vertex-shader').innerHTML,
+			fragmentShader: document.getElementById('2d-fragment-shader').innerHTML,
+			transparent:true
+		});
 		var previewCube = new THREE.Mesh( geometry, material );
 		scene.add( previewCube );
 		
@@ -258,9 +262,6 @@
 						addBlock(x,y,z, color);
 						actionPerformed();
 					}
-					//center = new THREE.Vector3(x,y,z);
-					previewCube.position = new THREE.Vector3(0,0,-1);
-					PreviewBlock(event);
 				}
 			}
 		}
@@ -290,8 +291,6 @@
 					actionPerformed()
 				}
 			}
-			previewCube.position = new THREE.Vector3(0,0,-1);
-			PreviewBlock(event);
 		}
 	</script>
 	<script>
@@ -347,11 +346,15 @@
 			var intersections = rayCaster.intersectObjects(scene.children, true);
 			
 			if ( intersections.length > 0 ) {
-				if ( intersected != intersections[ 0 ].object && intersections[0].object != previewCube ) {
-					var n = intersections[0].face.normal;
-					var x = Math.floor(intersections[0].object.position.x)
-					var y = Math.floor(intersections[0].object.position.y)
-					var z = Math.floor(intersections[0].object.position.z)
+				if ( intersected != intersections[ 0 ].object) {
+					var i = 0;
+					while(intersections[i].object == previewCube && i < 10){
+						i += 1;
+					}
+					var n = intersections[i].face.normal;
+					var x = Math.floor(intersections[i].object.position.x)
+					var y = Math.floor(intersections[i].object.position.y)
+					var z = Math.floor(intersections[i].object.position.z)
 					if(repaint == false && pipette == false){
 						x += n.x;
 						y += n.y;
@@ -391,7 +394,7 @@
 		
 		function colorPicked(){
 			color = parseInt(document.getElementById("colorPicker").value, 16);
-			previewCube.material.color.setHex(color);
+			//previewCube.material.color.setHex(color);
 			pickingColor = false;
 			//console.debug(color);
 		}
