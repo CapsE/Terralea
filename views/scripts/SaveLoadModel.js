@@ -89,13 +89,13 @@
 					if(ar[i] != ""){
 						var line = ar[i].split(":");
 						if(line[0] == "camPos"){
-							var p = line[1].split(",");
-							rotation = parseFloat(p[0]);
-							radius = parseFloat(p[1]);
-							camera.position.z = parseInt(p[2]);
-							center = new THREE.Vector3(parseInt(p[3]), parseInt(p[4]), parseInt(p[5]));
-							CalcRotation();
-							camera.lookAt(center);
+							// var p = line[1].split(",");
+							// rotation = parseFloat(p[0]);
+							// radius = parseFloat(p[1]);
+							// camera.position.z = parseInt(p[2]);
+							// center = new THREE.Vector3(parseInt(p[3]), parseInt(p[4]), parseInt(p[5]));
+							// CalcRotation();
+							// camera.lookAt(center);
 						}else{
 							var c = parseInt(line[1],16);
 							var p = line[0].split(",");

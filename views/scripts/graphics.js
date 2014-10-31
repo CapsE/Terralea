@@ -34,6 +34,13 @@ function convertHex(hex){
     return parseInt(hex, 16);
 }
 
+function hexToVec3(hex){
+	var r = parseInt(hex.substring(0,2),16)/255;
+	var g = parseInt(hex.substring(2,2),16)/255;
+	var b = parseInt(hex.substring(4,2),16)/255;
+	return new THREE.Vector3(r,g,b);
+}
+
 function myCallback(){
 	this.value = "";
 	this.onloaded = function(){

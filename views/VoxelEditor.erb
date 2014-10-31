@@ -154,7 +154,11 @@
 		render();
 		
 		var geometry = new THREE.CubeGeometry( 1, 1, 1 );
-		var material = new THREE.MeshBasicMaterial( { color: color, wireframe: true } );
+		var material = new THREE.MeshBasicMaterial( { 	color: color,
+														wireframe: false,
+														transparent: true,
+														opacity: 0.5
+													} );
 		var previewCube = new THREE.Mesh( geometry, material );
 		scene.add( previewCube );
 		
@@ -255,6 +259,8 @@
 						actionPerformed();
 					}
 					//center = new THREE.Vector3(x,y,z);
+					previewCube.position = new THREE.Vector3(0,0,-1);
+					PreviewBlock(event);
 				}
 			}
 		}
@@ -284,6 +290,8 @@
 					actionPerformed()
 				}
 			}
+			previewCube.position = new THREE.Vector3(0,0,-1);
+			PreviewBlock(event);
 		}
 	</script>
 	<script>
