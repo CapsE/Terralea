@@ -22,12 +22,15 @@
 		
 		</div>
 		
-		<div id="projectbar" class="window" style="position: fixed; top:70px; left: 275px; width:590px;">
-			<div id="rename" style="float: left;">
-				<label for="name">Name:</label>
-				<input id="name" value="untitled" onfocus="disableMove()" onblur="enableMove()"></input>
+		<div id="projectBar" class="window" style="position: fixed; top:12.5%; left: 12.5%; width:62.5%;">
+			<div id="p_buttons" class="itemGroup">
+				<img id="p_home" class="p_icon" src="icons/home.png"></img>
+				<img id="p_help" class="p_icon" src="icons/help.png"></img>
+				<img id="p_reset" class="p_icon" src="icons/reset.png" onclick="reset()"></img>
 			</div>
-			<button id="resetButton" onclick="reset()" style="float:left; margin-left:5px;">Neu</button><br>
+			<div id="p_rename" class="itemGroup" style="width: 35.625%";>
+				<input id="p_name" value="untitled" onfocus="disableMove()" onblur="enableMove()"></input>
+			</div>
 			<!-- <div id="timeline" style="position:fixed; top:10px; left:44%; width:12%;"> -->
 			<div id="timeline" style="float: left;">
 				<div id="timeElement0" class="timeElement" data-i="0" data-active="false" onclick="timeLineClick(event)"></div>
