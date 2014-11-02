@@ -28,11 +28,9 @@
 				<img id="p_help" class="p_icon" src="icons/help.png"></img>
 				<img id="p_reset" class="p_icon" src="icons/reset.png" onclick="reset()"></img>
 			</div>
-			<div id="p_rename" class="itemGroup" style="width: 35.625%";>
-				<input id="p_name" value="untitled" onfocus="disableMove()" onblur="enableMove()"></input>
-			</div>
+			<input id="p_name" class="itemGroup" value="untitled" onfocus="disableMove()" onblur="enableMove()"></input>
 			<!-- <div id="timeline" style="position:fixed; top:10px; left:44%; width:12%;"> -->
-			<div id="timeline" style="float: left;">
+			<div id="timeline" style="float: left; width: 144px; height: 48px;">
 				<div id="timeElement0" class="timeElement" data-i="0" data-active="false" onclick="timeLineClick(event)"></div>
 				<div id="timeElement1" class="timeElement" data-i="1" data-active="false" onclick="timeLineClick(event)"></div>
 				<div id="timeElement2" class="timeElement" data-i="2" data-active="false" onclick="timeLineClick(event)"></div>

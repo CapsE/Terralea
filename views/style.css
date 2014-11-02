@@ -55,16 +55,16 @@ html, body{
 }
 
 .itemGroup {
-	padding: 8px 8px 8px 8px;
+	padding: 8px;
+	margin: 4px;
 	position: relative;	
 	overflow: auto;
 	float: left;
 }
 
 #p_name {
-	margin: 4px;
 	height: 40px;
-	background-color: 
+	width: 464px;
 }
 
 .menuItemText{
@@ -122,11 +122,12 @@ html, body{
 }
 
 .timeElement{
-	width:10px;
-	height:10px;
+	width:16px;
+	height:16px;
 	cursor:pointer;
-	margin:5px;
+	margin:4px;
 	float:left;
 	border:solid;
-	border-width:1px;
+	border-width:2px;
 }
+
