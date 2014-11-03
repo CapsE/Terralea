@@ -1,7 +1,9 @@
 <html>
 	<head>
+		<meta charset="UTF8">
 		<link rel="shortcut icon" href="/Pics/Icon.ico" />
 		<link href="style.css" rel="stylesheet">
+		<script src="js/ColorChooser.js"></script>
 		<script src="js/three.min.js"></script>
 		<script src="js/loaders/JSONLoader.js"></script>
 		<script src="js/loaders/TextureLoader.js"></script>
@@ -13,7 +15,7 @@
 		<script src="js/jscolor/jscolor.js" type="text/javascript"></script>
 		<style>canvas { width: 100%; height: 100%;}</style>
 	</head>
-	<body style="margin:0px; padding:0px;">		
+	<body style="margin:0px; padding:0px;" onload="positionElements()">		
 		<div id="imageViewHolder" class="window" style="display:none; position:fixed; z-index:100; width:80%; left:10%;">
 			<img id="imageView" src="icons/t_pipette.png" style="width:100%;"></img>
 			<img id="imageViewClose" src="icons/redo.png" style="position:absolute; right:0px; top:0px; cursor:pointer; z-index:101;" onclick="closeScreenshot()"></img>
@@ -22,15 +24,9 @@
 		
 		</div>
 		
-		<div id="projectBar" class="window" style="position: fixed; top:12.5%; left: 12.5%; width:62.5%;">
-			<div id="p_buttons" class="itemGroup">
-				<img id="p_home" class="p_icon" src="icons/home.png"></img>
-				<img id="p_help" class="p_icon" src="icons/help.png"></img>
-				<img id="p_reset" class="p_icon" src="icons/reset.png" onclick="reset()"></img>
-			</div>
-			<input id="p_name" class="itemGroup" value="untitled" onfocus="disableMove()" onblur="enableMove()"></input>
-			<!-- <div id="timeline" style="position:fixed; top:10px; left:44%; width:12%;"> -->
-			<div id="timeline" style="float: left; width: 144px; height: 48px;">
+		
+
+			<div id="timeline" class="window" style="top:16px; position:fixed;">
 				<div id="timeElement0" class="timeElement" data-i="0" data-active="false" onclick="timeLineClick(event)"></div>
 				<div id="timeElement1" class="timeElement" data-i="1" data-active="false" onclick="timeLineClick(event)"></div>
 				<div id="timeElement2" class="timeElement" data-i="2" data-active="false" onclick="timeLineClick(event)"></div>
@@ -41,12 +37,22 @@
 				<div id="timeElement7" class="timeElement" data-i="7" data-active="false" onclick="timeLineClick(event)"></div>
 				<div id="timeElement8" class="timeElement" data-i="8" data-active="false" onclick="timeLineClick(event)"></div>
 				<div id="timeElement9" class="timeElement" data-i="9" data-active="false" onclick="timeLineClick(event)"></div>
+				<div id="timeElement10" class="timeElement" data-i="10" data-active="false" onclick="timeLineClick(event)"></div>
+				<div id="timeElement11" class="timeElement" data-i="11" data-active="false" onclick="timeLineClick(event)"></div>
+				<div id="timeElement12" class="timeElement" data-i="12" data-active="false" onclick="timeLineClick(event)"></div>
+				<div id="timeElement13" class="timeElement" data-i="13" data-active="false" onclick="timeLineClick(event)"></div>
+				<div id="timeElement14" class="timeElement" data-i="14" data-active="false" onclick="timeLineClick(event)"></div>
+				<div id="timeElement15" class="timeElement" data-i="15" data-active="false" onclick="timeLineClick(event)"></div>
+				<div id="timeElement16" class="timeElement" data-i="16" data-active="false" onclick="timeLineClick(event)"></div>
+				<div id="timeElement17" class="timeElement" data-i="17" data-active="false" onclick="timeLineClick(event)"></div>
+				<div id="timeElement18" class="timeElement" data-i="18" data-active="false" onclick="timeLineClick(event)"></div>
+				<div id="timeElement19" class="timeElement" data-i="19" data-active="false" onclick="timeLineClick(event)"></div>
 			</div>
 			
-		</div>
+
 		
-		<div id="toolbar" class="window" style="position:fixed; right:0px; width:18%;">
-			<input id="colorPicker" class="color" onblur="colorPicked()" onclick="PickingColor()"><br>
+		<div id="toolbar" class="window" style="position:fixed; right:80px; top:80px;">
+			<input id="colorPicker" class="color" onblur="colorPicked()" onclick="PickingColor()" style="display:none;"><br>
 			<img id="add" src="icons/t_add.png" class="icon" ></img> 
 			<img id="erase" src="icons/t_erase.png" class="icon" ></img><br>
 			<img id="pipette" src="icons/t_pipette.png" class="icon" onclick="Pipette()"></img>
@@ -54,21 +60,41 @@
 			<!-- <img id="replaceIcon" src="Pics/Replace.png" class="icon" onclick="Replace()"></img> -->
 			<img id="cubeMode" src="icons/t_magictrowel.png" class="icon" onclick="CubeMode()"></img>
 			<img id="double" src="icons/t_enlarge.png" class="icon" onclick="Double()"></img><br>
-			<img id="revert" src="icons/undo.png" class="icon" onclick="revertAction()"></img>
-			<img id="revert" src="icons/redo.png" class="icon" onclick="forwardAction()"></img>
-			<br>
 			<div id="replace" style="display:none;">
 				<input id="replacePicker" class="color" onblur="replacePicked()">
 			</div>
+		</div>
 			<br>
+			<!--
 			<button id="safeButton" onclick="safe()">Save</button>
 			<button id="loadButton" onclick="load()">Load</button>
 			<button id="loadButton" onclick="exportModel()">Export</button>
-			<button id="screenshotButton" onclick="screenShot()">Screenshot</button>
-			<div id="colors" width="100%" height="400px" class="window" style="padding:0px; border-width:0.5px;">
-				<div id="colorField" class="colorBox" style="display:none;" onclick="colorClicked(event)"></div>
+			<button id="screenshotButton" onclick="screenShot()">Screenshot</button> -->
+			<div id="colorToolbar" class="window" style="right:80px; position:fixed; top:300px; width:96px;">
+				<div id="colorChooser" style="display:none;">
+					<input id="colorTextfield" class="button" value="#FF0000" style="width:100%;border:solid; border-width:2px;	border-color:#99B2B7; margin:0px; margin-bottom:8px;"></input>
+					<canvas id="colorCanvas" style="float:left; height:243px; width:96px; margin:0px; padding:0px; position:relative; top:0px; left:0px; background-image:url('Img/color-picker.png');"></canvas>
+					<img id="colorGradient" src="Img/color-picker.png" style="display:none"></img>
+				</div>
+				<div id="colors">
+					<div id="colorField" class="colorBox" style="background-color:#909090;" onclick="colorClicked(event)"></div>
+					<div id="colorField" class="colorBox" style="background-color:#6C6678;" onclick="colorClicked(event)"></div>
+					<div id="colorField" class="colorBox" style="background-color:#64492A;" onclick="colorClicked(event)"></div>
+					<div id="colorField" class="colorBox" style="background-color:#CFB610;" onclick="colorClicked(event)"></div>
+					<div id="colorField" class="colorBox" style="background-color:#BD6E50;" onclick="colorClicked(event)"></div>
+					<div id="colorField" class="colorBox" style="background-color:#40188D;" onclick="colorClicked(event)"></div>
+					<div id="colorField" class="colorBox" style="background-color:#454438;" onclick="colorClicked(event)"></div>
+					<div id="colorField" class="colorBox" style="background-color:#054100;" onclick="colorClicked(event)"></div>
+					<div id="colorField" class="colorBox" style="background-color:#365C03;" onclick="colorClicked(event)"></div>
+					<div id="colorField" class="colorBox" style="background-color:#558E08;" onclick="colorClicked(event)"></div>
+					<div id="colorField" class="colorBox" style="background-color:#D8E85D;" onclick="colorClicked(event)"></div>
+					<div id="colorField" class="colorBox" style="background-color:#9ACFF3;" onclick="colorClicked(event)"></div>
+				</div>
+				<br style="clear:both;">
+				
+				<div id="colorButton" class="button" style="height:24px;" onclick="startColorChange()">Ändern</div>
 			</div>
-			<textarea id="safeCode" style="width:95%; height:200px; display:block;" align="top" onfocus="this.select()">
+			<textarea id="safeCode" style="width:95%; height:200px; display:none;" align="top" onfocus="this.select()">
 			
 			</textarea>
 		</div>
@@ -315,7 +341,12 @@
 		CalcRotation();
 		camera.lookAt(new THREE.Vector3(0,0,0));
 		
-		window.addEventListener( 'resize', onWindowResize, false );
+		window.addEventListener( 'positionElements()', onWindowResize, false );
+		
+		function positionElements(){
+			var pos = (window.innerWidth -588) /2;
+			document.getElementById("timeline").style.left = pos;
+		}
 		
 		function addBlock(x,y,z,c){
 			if(blocks[[x,y,z]] == null){
@@ -324,15 +355,6 @@
 				c = c.toString(16);
 				while(c.length < 6){
 					c = "0" + c;
-				}
-				if(usedColors[c] == null){
-					var palette = document.getElementById("colors");
-					var colorField = document.getElementById("colorField").cloneNode(false);
-					colorField.style.display = "block";
-					colorField.style.backgroundColor = c;
-					palette.appendChild(colorField);
-					usedColors[c] = c;
-					console.debug(c);
 				}
 			}
 		}
@@ -383,10 +405,33 @@
 		
 		function colorClicked(e){
 			var c =  rgb2hex(e.target.style.backgroundColor);
-			document.getElementById("colorPicker").value = c;
-			document.getElementById("colorPicker").focus();
-			document.getElementById("colorPicker").blur();
-			console.debug(c);
+			document.getElementById("colorTextfield").style.backgroundColor = c;
+			document.getElementById("colorTextfield").value = c;
+			color = parseInt(c, 16);
+			uniforms = {myColor: { type: "c", value: new THREE.Color( convertHex(c) )}, myTransparenz:{type: "f", value: 0.7}};
+			material = new THREE.ShaderMaterial({
+				uniforms: uniforms,
+				vertexShader: document.getElementById('2d-vertex-shader').innerHTML,
+				fragmentShader: document.getElementById('2d-fragment-shader').innerHTML,
+				transparent:true
+			});
+			previewCube.material = material;
+			//document.getElementById("colorPicker").value = c;
+			//document.getElementById("colorPicker").focus();
+			//document.getElementById("colorPicker").blur();
+			console.debug(color);
+		}
+		
+		function startColorChange(){
+			if(pickingColor == false){
+				document.getElementById("colorChooser").style.display = "block";
+				document.getElementById("colors").style.display = "none";
+				pickingColor = true;
+			}else{
+				document.getElementById("colorChooser").style.display = "none";
+				document.getElementById("colors").style.display = "block";
+				pickingColor = false;
+			}
 		}
 		
 		function PickingColor(){
@@ -419,18 +464,19 @@
 			var te = e.target;
 			var c = parseInt(te.dataset.i)
 			if(te.dataset.active == "true"){
-				for(var i = 0; i < 10; i++){
+				for(var i = 0; i < 20; i++){
 					element = document.getElementById("timeElement" + i);
-					if(i > c){
+					if(i != c){
 						if(element.dataset.active == "true"){
-							element.style.backgroundColor = "lightblue";
+							element.style.backgroundColor = "#99B2B7";
 						}else{
-							element.style.backgroundColor = "white";
+							element.style.backgroundColor = "transparent";
 						}
+						element.style.borderColor = "#948C75";
 					}else{
-						element.style.backgroundColor = "blue";
+						element.style.backgroundColor = "#948C75";
+						element.style.borderColor = "#7A6A53";
 					}
-					element.style.borderWidth = "1px";
 				}
 				te.style.borderWidth = "2px";
 				autoLoad(actions[c]);
@@ -442,18 +488,21 @@
 			if(actionCounter < actions.length -1){
 				actions.splice(actionCounter +1, actions.length);
 			}
-			if(actions.length >= 10){
+			if(actions.length >= 20){
 				actions.shift();
 			}
 			actions.push(autoSafe());
 			actionCounter = actions.length -1;
 			var te = document.getElementById("timeElement" + actionCounter);
-			for(var i = 0; i < 10; i++){
+			for(var i = 0; i < 20; i++){
 				element = document.getElementById("timeElement" + i);
-				element.style.borderWidth = "1px";
+				element.style.borderColor = "";
+				if(i < actionCounter){
+					element.style.backgroundColor = "#99B2B7";
+				}
 			}
-			te.style.backgroundColor = "blue";
-			te.style.borderWidth = "2px";
+			te.style.backgroundColor = "#948C75";
+			te.style.borderColor = "#7A6A53";
 			te.dataset.active = true;
 		}
 		
@@ -478,20 +527,20 @@
 		function Pipette(){
 			if(pipette == true){
 				pipette = false;
-				document.getElementById("pipette").src = "Pics/PipetteInActive.png";
+				document.getElementById("pipette").className = "icon";
 			}else{
 				pipette = true;
-				document.getElementById("pipette").src = "Pics/PipetteActive.png";
+				document.getElementById("pipette").className = "p_icon";
 			}
 		}
 		
 		function Repaint(){
 			if(repaint == true){
 				repaint = false;
-				document.getElementById("repaint").src = "Pics/tool_brush.png";
+				document.getElementById("repaint").className = "icon";
 			}else{
 				repaint = true;
-				document.getElementById("repaint").src = "Pics/tool_brush_hl.png";
+				document.getElementById("repaint").className = "p_icon";
 			}
 			
 		}
@@ -517,10 +566,10 @@
 			if(cubeMode == false){
 				cubeMode = true;
 				cubeModeSelections = [];
-				document.getElementById("cubeMode").src = "Pics/CubeActive.png";
+				document.getElementById("cubeMode").className = "p_icon";
 			}else{
 				cubeMode = false;
-				document.getElementById("cubeMode").src = "Pics/Cube.png";
+				document.getElementById("cubeMode").className = "icon";
 			}
 		}
 		
