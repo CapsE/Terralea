@@ -50,8 +50,30 @@
           }
         }, false);
 
-        context.drawImage(imageObj, 0,0);
-		console.debug("Drew image...");
+        var w = canvas.width;
+		var h = canvas.height;
+		
+		var rgb;
+		
+		var colour = new HSVColour(0, 125, 125);
+
+		for(var y = 0; y < h; y++){
+			var hue = y * 360 / h;
+			for(var x = 0; x < w; x++){
+				if(x < w/2){
+					colour = new HSVColour(hue, x*100/(w/2), 100);
+				}else{
+					colour = new HSVColour(hue, 100, 100 -((x- w/2)*100/(w/2)));
+				}
+				//colour.s = x * 255 / w;
+				
+				rgb = colour.getRGB();
+				context.strokeStyle = "rgb(" + Math.floor(rgb["r"]) + "," + Math.floor(rgb["g"]) + "," + Math.floor(rgb["b"]) + ")";
+				context.fillStyle = "rgb(" + Math.floor(rgb["r"]) + "," + Math.floor(rgb["g"]) + "," + Math.floor(rgb["b"]) + ")";
+				context.fillRect(x,y,1,1);
+			}
+			//console.debug(rgb["g"]);
+		}
         //drawColorSquare(canvas, 'white', imageObj);
       }
 
