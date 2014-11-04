@@ -1,30 +1,23 @@
-function getMousePos(canvas, evt) {
+	function getMousePos(canvas, evt) {
         var rect = canvas.getBoundingClientRect();
         return {
           x: evt.clientX - rect.left,
           y: evt.clientY - rect.top
         };
       }
-      function drawColorSquare(canvas, color, imageObj) {
-        // var colorSquareSize = 100;
-        // var padding = 0;
-        // var context = canvas.getContext('2d');
-        // var squareY = (canvas.width - colorSquareSize + imageObj.width) / 2;
-        // var squareX = (canvas.height - colorSquareSize) / 2;
-
-        // context.beginPath();
-        // context.fillStyle = color;
-        // context.fillRect(squareX, squareY, colorSquareSize, colorSquareSize);
-        // context.strokeRect(squareX, squareY, colorSquareSize, colorSquareSize);
-		
+	  
+      function drawColorSquare(canvas, color, imageObj) {		
 		document.getElementById("colorTextfield").style.backgroundColor = color;
 		console.debug(color);
       }
-      function init(imageObj) {
+	  
+      function initColorChooser() {
+		console.debug("initializing...");
         var padding = 0;
         var canvas = document.getElementById('colorCanvas');
         var context = canvas.getContext('2d');
         var mouseDown = false;
+		var imageObj = document.getElementById("colorGradient");
 
         context.strokeStyle = '#444';
         context.lineWidth = 2;
@@ -57,9 +50,8 @@ function getMousePos(canvas, evt) {
           }
         }, false);
 
-        context.drawImage(document.getElementById("colorGradient"), 0,0);
+        context.drawImage(imageObj, 0,0);
+		console.debug("Drew image...");
         //drawColorSquare(canvas, 'white', imageObj);
       }
- 
-      init(this);
 

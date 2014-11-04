@@ -73,7 +73,7 @@
 			<div id="colorToolbar" class="window" style="right:80px; position:fixed; top:300px; width:96px;">
 				<div id="colorChooser" style="display:none;">
 					<input id="colorTextfield" class="button" value="#FF0000" style="width:100%;border:solid; border-width:2px;	border-color:#99B2B7; margin:0px; margin-bottom:8px;"></input>
-					<canvas id="colorCanvas" style="float:left; height:243px; width:96px; margin:0px; padding:0px; position:relative; top:0px; left:0px; background-image:url('Img/color-picker.png');"></canvas>
+					<canvas id="colorCanvas" style="float:left; height:243px; width:96px; margin:0px; padding:0px; position:relative; top:0px; left:0px;"></canvas>
 					<img id="colorGradient" src="Img/color-picker.png" style="display:none"></img>
 				</div>
 				<div id="colors">
@@ -193,6 +193,7 @@
 		var previewCube = new THREE.Mesh( geometry, material );
 		scene.add( previewCube );
 		
+		initColorChooser();
 	</script>
 	<script>	
 
