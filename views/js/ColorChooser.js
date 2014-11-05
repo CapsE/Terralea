@@ -1,26 +1,32 @@
+	var colourTable = {};
+	
 	function getMousePos(canvas, evt) {
         var rect = canvas.getBoundingClientRect();
-        return {
-          x: evt.clientX - rect.left,
-          y: evt.clientY - rect.top
-        };
+		var x = evt.clientX - rect.left;
+		var y = evt.clientY - rect.top;
+		if(x >= 0 && y >= 0){
+			console.debug({x: x, y: y});
+			return {x: x, y: y};
+		}else{
+			return null;
+		}
       }
 	  
       function drawColorSquare(canvas, color, imageObj) {		
-		document.getElementById("colorTextfield").style.backgroundColor = color;
-		console.debug(color);
+		document.getElementById("colorTextfield").style.backgroundColor = color.getCSSHexadecimalRGB();
+		document.getElementById("colorTextfield").value = color.getCSSHexadecimalRGB();
+		color = parseInt(color.getCSSHexadecimalRGB(),16);
+		//console.debug(color);
       }
 	  
       function initColorChooser() {
 		console.debug("initializing...");
-        var padding = 0;
         var canvas = document.getElementById('colorCanvas');
         var context = canvas.getContext('2d');
         var mouseDown = false;
-		var imageObj = document.getElementById("colorGradient");
+		var imageObj = canvas;
 
-        context.strokeStyle = '#444';
-        context.lineWidth = 2;
+        context.lineWidth = 1;
 
         canvas.addEventListener('mousedown', function() {
           mouseDown = true;
@@ -34,24 +40,25 @@
           var mousePos = getMousePos(canvas, evt);
           var color = undefined;
 
-          if(mouseDown && mousePos !== null && mousePos.x > padding && mousePos.x < padding + imageObj.width && mousePos.y > padding && mousePos.y < padding + imageObj.height) {
-
-            // color picker image is 256x256 and is offset by 10px
-            // from top and bottom
-            var imageData = context.getImageData(padding, padding, imageObj.width, imageObj.width);
-            var data = imageData.data;
-            var x = mousePos.x - padding;
-            var y = mousePos.y - padding;
-            var red = data[((imageObj.width * y) + x) * 4];
-            var green = data[((imageObj.width * y) + x) * 4 + 1];
-            var blue = data[((imageObj.width * y) + x) * 4 + 2];
-            var color = 'rgb(' + red + ',' + green + ',' + blue + ')';
+          if(mouseDown && mousePos !== null) {
+            var x = mousePos.x;
+            var y = mousePos.y;
+			//var imageData = context.getImageData(x, y, 1, 1);
+            //var data = imageData.data;
+			
+            //var red = data[0];
+            //var green = data[1];
+            //var blue = data[2];
+            //var color = 'rgb(' + red + ',' + green + ',' + blue + ')';
+            var color = colourTable[x + "," + y];//new RGBColour(red, green, blue);
             drawColorSquare(canvas, color, imageObj);
           }
         }, false);
-
+		
+		
         var w = canvas.width;
 		var h = canvas.height;
+		console.debug("Canvas size: " + w + ";" + h );
 		
 		var rgb;
 		
@@ -62,9 +69,12 @@
 			for(var x = 0; x < w; x++){
 				if(x < w/2){
 					colour = new HSVColour(hue, x*100/(w/2), 100);
+					colourTable[x + "," + y] = colour;
 				}else{
 					colour = new HSVColour(hue, 100, 100 -((x- w/2)*100/(w/2)));
+					colourTable[x + "," + y] = colour;
 				}
+				
 				//colour.s = x * 255 / w;
 				
 				rgb = colour.getRGB();

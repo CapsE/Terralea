@@ -76,11 +76,11 @@
 			<div id="colorToolbar" class="window" style="right:80px; position:fixed; top:300px; width:96px;">
 				<div id="colorChooser" style="display:none;">
 					<input id="colorTextfield" class="button" value="#FF0000" style="width:100%;border:solid; border-width:2px;	border-color:#99B2B7; margin:0px; margin-bottom:8px;"></input>
-					<canvas id="colorCanvas" style="float:left; height:243px; width:96px; margin:0px; padding:0px; position:relative; top:0px; left:0px;"></canvas>
+					<canvas id="colorCanvas" height="243px" width="96px" style="float:left; width:96px; height:243px; margin:0px; padding:0px; position:relative; top:0px; left:0px;"></canvas>
 					<img id="colorGradient" src="Img/color-picker.png" style="display:none"></img>
 				</div>
 				<div id="colors">
-					<div id="colorField" class="colorBox" style="background-color:#909090;" onclick="colorClicked(event)"></div>
+					<div id="colorField0" class="colorBox" style="background-color:#909090;" onclick="colorClicked(event)"></div>
 					<div id="colorField" class="colorBox" style="background-color:#6C6678;" onclick="colorClicked(event)"></div>
 					<div id="colorField" class="colorBox" style="background-color:#64492A;" onclick="colorClicked(event)"></div>
 					<div id="colorField" class="colorBox" style="background-color:#CFB610;" onclick="colorClicked(event)"></div>
@@ -142,6 +142,7 @@
 		var cubeModeSelections = [];
 		var actions = [];
 		var actionCounter = 0;
+		var activeColorfield = document.getElementById("colorField0");
 		var toReplace;
 		var center = new THREE.Vector3(0,0,0);
 		var color = "FF0000";
@@ -408,6 +409,7 @@
 		}
 		
 		function colorClicked(e){
+			activeColorfield = e.target;
 			var c =  rgb2hex(e.target.style.backgroundColor);
 			document.getElementById("colorTextfield").style.backgroundColor = c;
 			document.getElementById("colorTextfield").value = c;
@@ -428,12 +430,24 @@
 		
 		function startColorChange(){
 			if(pickingColor == false){
+				replace = true;
+				toReplace = [];
+				var keys = Object.keys(blocks);
+				for(var i = 0; i < keys.length; i++){
+					if(colors[keys[i]] == color){
+						toReplace.push(keys[i]);
+					}
+				}
+				
 				document.getElementById("colorChooser").style.display = "block";
 				document.getElementById("colors").style.display = "none";
 				pickingColor = true;
 			}else{
 				document.getElementById("colorChooser").style.display = "none";
 				document.getElementById("colors").style.display = "block";
+				var newColor = document.getElementById("colorTextfield").style.backgroundColor;
+				activeColorfield.style.backgroundColor = newColor;
+				replacePicked(newColor)
 				pickingColor = false;
 			}
 		}
@@ -448,8 +462,9 @@
 			pickingColor = false;
 			//console.debug(color);
 		}
-		function replacePicked(){
-			replace = parseInt(document.getElementById("replacePicker").value, 16);
+		
+		function replacePicked(replace){
+			
 			var keys = toReplace;
 			for(var i = 0; i < keys.length; i++){
 				colors[keys[i]] = replace;
@@ -458,6 +473,22 @@
 				addBlock(k[0], k[1], k[2], replace);					
 			}
 			actionPerformed();
+		}
+		
+		function Replace(){
+			if(replace == false){
+				replace = true;
+				toReplace = [];
+				var keys = Object.keys(blocks);
+				for(var i = 0; i < keys.length; i++){
+					if(colors[keys[i]] == color){
+						toReplace.push(keys[i]);
+					}
+				}
+			}else{
+				replace = false;
+				document.getElementById("replace").style.display = "none";
+			}
 		}
 		
 		function getBlock(x,y,z){
@@ -547,23 +578,6 @@
 				document.getElementById("repaint").className = "p_icon";
 			}
 			
-		}
-		
-		function Replace(){
-			if(replace == false){
-				document.getElementById("replace").style.display = "block";
-				replace = true;
-				toReplace = [];
-				var keys = Object.keys(blocks);
-				for(var i = 0; i < keys.length; i++){
-					if(colors[keys[i]] == color){
-						toReplace.push(keys[i]);
-					}
-				}
-			}else{
-				replace = false;
-				document.getElementById("replace").style.display = "none";
-			}
 		}
 		
 		function CubeMode(){
