@@ -55,8 +55,12 @@ html, body{
 }
 
 .p_icon{
+	width:48px;
+	height:48px;
+	position:relative;	
 	cursor: pointer;
-	float: left;	
+	border: solid 2px #99B2B7;
+	margin: -2px;
 }
 
 .p_icon:hover {

@@ -45,7 +45,7 @@
 		function safe(){
 			var out = autoSafe();
 			document.getElementById("safeCode").value = out;
-			document.getElementById("safeCode").style.display = "block";
+			document.getElementById("safeCodeHolder").style.display = "block";
 			getImageData = true;
 			render();
 			
