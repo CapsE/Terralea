@@ -149,6 +149,7 @@
 		var toReplace;
 		var center = new THREE.Vector3(0,0,0);
 		var color = "FF0000";
+		var colorHex = "FF0000";
 		document.getElementById("colorPicker").value = color;
 		var replace = parseInt(document.getElementById("replacePicker").value, 16);
 		var imageData;
@@ -450,7 +451,12 @@
 				document.getElementById("colors").style.display = "block";
 				var newColor = document.getElementById("colorTextfield").style.backgroundColor;
 				activeColorfield.style.backgroundColor = newColor;
-				replacePicked(newColor)
+				
+				var c =  rgb2hex(newColor);
+				color = parseInt(c, 16);
+				
+				//console.debug(color);
+				replacePicked(color);
 				pickingColor = false;
 			}
 		}

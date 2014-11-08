@@ -15,8 +15,9 @@
       function drawColorSquare(canvas, color, imageObj) {		
 		document.getElementById("colorTextfield").style.backgroundColor = color.getCSSHexadecimalRGB();
 		document.getElementById("colorTextfield").value = color.getCSSHexadecimalRGB();
+		colorHex = color.getCSSHexadecimalRGB();
 		color = parseInt(color.getCSSHexadecimalRGB(),16);
-		//console.debug(color);
+
       }
 	  
       function initColorChooser() {
