@@ -28,12 +28,7 @@
 		
 
 		<div id="timeline" class="window" style="top:16px; position:fixed;">
-			<span class="icon">
-				<a href="VoxelEditor.erb">
-					<img id="reset" src="icons/p_trash.png"></img>
-				</a>
-				<span>Alles zurücksetzen</span>
-			</span>
+			
 			<div id="timeElement0" class="timeElement" data-i="0" data-active="false" onclick="timeLineClick(event)"></div>
 			<div id="timeElement1" class="timeElement" data-i="1" data-active="false" onclick="timeLineClick(event)"></div>
 			<div id="timeElement2" class="timeElement" data-i="2" data-active="false" onclick="timeLineClick(event)"></div>
@@ -54,6 +49,18 @@
 			<div id="timeElement17" class="timeElement" data-i="17" data-active="false" onclick="timeLineClick(event)"></div>
 			<div id="timeElement18" class="timeElement" data-i="18" data-active="false" onclick="timeLineClick(event)"></div>
 			<div id="timeElement19" class="timeElement" data-i="19" data-active="false" onclick="timeLineClick(event)"></div>
+			
+			<span class="icon">
+				<a href="VoxelEditor.erb">
+					<img id="reset" src="icons/p_trash.png"></img>
+				</a>
+				<span>Alles zurücksetzen</span>
+			</span>
+			
+			<span id="export" class="icon">
+				<img src="icons/p_export.png" onclick="safe()"></img>
+				<span>Modell exportieren</span>
+			</span>
 		</div>
 			
 		<div id="colorToolbar" class="window" style="right:80px; position:fixed; top:290px; width:96px;">
@@ -116,16 +123,12 @@
 			</div>
 		</div>		
 		
-		<div id="projectBar" class="window" style="right: 80px; top:16px; height: 48px; position: fixed;">	
+		<!-- <div id="projectBar" class="window" style="right: 80px; top:16px; height: 48px; position: fixed;">	
 			<span id="screenshot" class="icon">
 				<img src="icons/t_enlarge.png" onclick="screenShot()"></img>
 				<span>Modellfoto aufnehmen</span>
 			</span>
-			<span id="export" class="icon">
-				<img src="icons/p_export.png" onclick="safe()"></img>
-				<span>Modell exportieren</span>
-			</span>
-		</div>		
+		</div>	 -->	
 		
 		<!-- 	
 		<br>

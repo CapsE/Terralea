@@ -68,7 +68,7 @@ html, body{
 	height:16px;
 	cursor:pointer;
 	margin:4px;
-	margin-top: 24px;
+	margin-top: 16px;
 	float:left;
 	border:solid;
 	border-width:2px;
@@ -96,7 +96,7 @@ html, body{
 .window{
 	padding:8px; 
 	border:solid;
-	border-width:4px;
+	border-width:2px;
 	border-color:#99B2B7; 
 	background-color:#d5ded9;
 }
