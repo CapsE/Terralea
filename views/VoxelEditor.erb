@@ -71,17 +71,17 @@
 			</div>
 			<div id="colors">
 				<div id="colorField0" class="colorBox" style="background-color:#909090;" onclick="colorClicked(event)"></div>
-				<div id="colorField" class="colorBox" style="background-color:#6C6678;" onclick="colorClicked(event)"></div>
-				<div id="colorField" class="colorBox" style="background-color:#64492A;" onclick="colorClicked(event)"></div>
-				<div id="colorField" class="colorBox" style="background-color:#CFB610;" onclick="colorClicked(event)"></div>
-				<div id="colorField" class="colorBox" style="background-color:#BD6E50;" onclick="colorClicked(event)"></div>
-				<div id="colorField" class="colorBox" style="background-color:#40188D;" onclick="colorClicked(event)"></div>
-				<div id="colorField" class="colorBox" style="background-color:#454438;" onclick="colorClicked(event)"></div>
-				<div id="colorField" class="colorBox" style="background-color:#054100;" onclick="colorClicked(event)"></div>
-				<div id="colorField" class="colorBox" style="background-color:#365C03;" onclick="colorClicked(event)"></div>
-				<div id="colorField" class="colorBox" style="background-color:#558E08;" onclick="colorClicked(event)"></div>
-				<div id="colorField" class="colorBox" style="background-color:#D8E85D;" onclick="colorClicked(event)"></div>
-				<div id="colorField" class="colorBox" style="background-color:#9ACFF3;" onclick="colorClicked(event)"></div>
+				<div id="colorField1" class="colorBox" style="background-color:#6C6678;" onclick="colorClicked(event)"></div>
+				<div id="colorField2" class="colorBox" style="background-color:#64492A;" onclick="colorClicked(event)"></div>
+				<div id="colorField3" class="colorBox" style="background-color:#CFB610;" onclick="colorClicked(event)"></div>
+				<div id="colorField4" class="colorBox" style="background-color:#BD6E50;" onclick="colorClicked(event)"></div>
+				<div id="colorField5" class="colorBox" style="background-color:#40188D;" onclick="colorClicked(event)"></div>
+				<div id="colorField6" class="colorBox" style="background-color:#454438;" onclick="colorClicked(event)"></div>
+				<div id="colorField7" class="colorBox" style="background-color:#054100;" onclick="colorClicked(event)"></div>
+				<div id="colorField8" class="colorBox" style="background-color:#365C03;" onclick="colorClicked(event)"></div>
+				<div id="colorField9" class="colorBox" style="background-color:#558E08;" onclick="colorClicked(event)"></div>
+				<div id="colorField10" class="colorBox" style="background-color:#D8E85D;" onclick="colorClicked(event)"></div>
+				<div id="colorField11" class="colorBox" style="background-color:#9ACFF3;" onclick="colorClicked(event)"></div>
 			</div>
 			<br style="clear:both;">
 
@@ -143,6 +143,7 @@
 				
 			</textarea>
 			<button onclick="document.getElementById('safeCodeHolder').style.display = 'none';" value="OK">OK</button>
+			<button onclick="load()" value="Load">Load</button>
 		</div>
 	</body>	
 	
@@ -281,11 +282,27 @@
 					if(pipette == true){
 						if(colors[[x,y,z]] != null){
 							color = colors[[x,y,z]];
-							document.getElementById("colorPicker").value = color.toString(16);
-							document.getElementById("colorPicker").focus();	
-							document.getElementById("colorPicker").blur();	
+							//document.getElementById("colorPicker").value = color.toString(16);
+							//document.getElementById("colorPicker").focus();	
+							//document.getElementById("colorPicker").blur();	
 							pipette = false;
-							document.getElementById("pipette").src = "Pics/PipetteInActive.png";
+							document.getElementById("pipette").className = "icon";
+							
+							activeColorfield.style.backgroundColor = color.toString(16);
+				
+							var c = color.toString(16);
+							console.debug(c);
+							//color = parseInt(c, 16);
+							
+							uniforms = {myColor: { type: "c", value: new THREE.Color( convertHex(c) )}, myTransparenz:{type: "f", value: 0.7}};
+							material = new THREE.ShaderMaterial({
+								uniforms: uniforms,
+								vertexShader: document.getElementById('2d-vertex-shader').innerHTML,
+								fragmentShader: document.getElementById('2d-fragment-shader').innerHTML,
+								transparent:true
+							});
+							previewCube.material = material;
+				
 						}
 					}else if(repaint == true){
 						removeBlock(x,y,z);
@@ -457,6 +474,10 @@
 			var c =  rgb2hex(e.target.style.backgroundColor);
 			document.getElementById("colorTextfield").style.backgroundColor = c;
 			document.getElementById("colorTextfield").value = c;
+			for(var i = 0; i < 12; i++){
+				document.getElementById("colorField" + i).className = "colorBox";
+			}
+			e.target.className = "colorBox_active";
 			color = parseInt(c, 16);
 			uniforms = {myColor: { type: "c", value: new THREE.Color( convertHex(c) )}, myTransparenz:{type: "f", value: 0.7}};
 			material = new THREE.ShaderMaterial({
@@ -495,8 +516,14 @@
 				var c =  rgb2hex(newColor);
 				color = parseInt(c, 16);
 				
-				//console.debug(color);
-				replacePicked(color);
+				uniforms = {myColor: { type: "c", value: new THREE.Color( convertHex(c) )}, myTransparenz:{type: "f", value: 0.7}};
+				material = new THREE.ShaderMaterial({
+					uniforms: uniforms,
+					vertexShader: document.getElementById('2d-vertex-shader').innerHTML,
+					fragmentShader: document.getElementById('2d-fragment-shader').innerHTML,
+					transparent:true
+				});
+				previewCube.material = material;
 				pickingColor = false;
 			}
 		}
