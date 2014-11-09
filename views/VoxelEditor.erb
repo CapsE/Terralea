@@ -80,7 +80,7 @@
 				<div id="colorField7" class="colorBox" style="background-color:#558E08;" onclick="colorClicked(event)"></div>
 				<div id="colorField8" class="colorBox" style="background-color:#40188d;" onclick="colorClicked(event)"></div>
 				<div id="colorField9" class="colorBox" style="background-color:#9acff3;" onclick="colorClicked(event)"></div>
-				<div id="colorField10" class="colorBox" style="background-color:#909090;" onclick="colorClicked(event)"></div>
+				<div id="colorField10" class="colorBox_active" style="background-color:#909090;" onclick="colorClicked(event)"></div>
 				<div id="colorField11" class="colorBox" style="background-color:#d1cfbe;" onclick="colorClicked(event)"></div>
 			</div>
 			<br style="clear:both;">
@@ -189,8 +189,8 @@
 		var activeColorfield = document.getElementById("colorField0");
 		var toReplace;
 		var center = new THREE.Vector3(0,0,0);
-		var color = "FF0000";
-		var colorHex = "FF0000";
+		var color = "909090";
+		var colorHex = "909090";
 		document.getElementById("colorPicker").value = color;
 		var replace = parseInt(document.getElementById("replacePicker").value, 16);
 		var imageData;

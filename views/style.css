@@ -17,13 +17,13 @@ html, body{
 
 .colorBox_active{
 	background-color:red;
-	width:44px;
-	height:44px;
+	width:40px;
+	height:40px;
 	cursor:pointer;
 	float:left;
 	border:solid;
-	border-width: 2px;
-	border-color: #99B2B7;
+	border-width: 4px;
+	border-color: white;
 }
 
 .icon{
