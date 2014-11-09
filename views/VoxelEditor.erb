@@ -598,6 +598,11 @@
 		function actionPerformed(){
 			if(actionCounter < actions.length -1){
 				actions.splice(actionCounter +1, actions.length);
+				for(var i = actionCounter+1; i < 20; i++){
+					element = document.getElementById("timeElement" + i);
+					element.style.backgroundColor = "transparent";
+					element.dataset.active = "false";
+				}
 			}
 			if(actions.length >= 20){
 				actions.shift();
