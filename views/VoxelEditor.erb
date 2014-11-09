@@ -505,11 +505,13 @@
 				}
 				
 				document.getElementById("colorChooser").style.display = "block";
+				document.getElementById("colorButton").innerHTML = "Speichern";
 				document.getElementById("colors").style.display = "none";
 				pickingColor = true;
 			}else{
 				document.getElementById("colorChooser").style.display = "none";
 				document.getElementById("colors").style.display = "block";
+				document.getElementById("colorButton").innerHTML = "Ändern";
 				var newColor = document.getElementById("colorTextfield").style.backgroundColor;
 				activeColorfield.style.backgroundColor = newColor;
 				
