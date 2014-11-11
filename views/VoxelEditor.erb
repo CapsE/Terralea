@@ -90,27 +90,27 @@
 		
 		<div id="toolbar" class="window" style="position:fixed; right:80px; top:104px;">
 			<input id="colorPicker" class="color" onblur="colorPicked()" onclick="PickingColor()" style="display:none;">
-			<span id="add" class="icon">
-				<img src="icons/t_add.png"></img>
+			<span id="setMode" class="p_icon">
+				<img src="icons/t_add.png" onclick="setMode('setMode');"></img>
 				<span>Voxel erzeugen <i>(Linksklick)</i></span>
 			</span>
-			<span  id="erase" class="icon">
-				<img src="icons/t_erase.png"></img>
+			<span  id="deleteMode" class="icon">
+				<img src="icons/t_erase.png" onclick="setMode('deleteMode');"></img>
 				<span>Voxel löschen <i>(Rechtsklick)</i></span>
 			</span>	
 			<br>
 			<span id="pipette" class="icon">
-				<img src="icons/t_pipette.png" onclick="Pipette()"></img>
+				<img src="icons/t_pipette.png" onclick="setMode('pipette');"></img>
 				<span>Voxelfarbe aufnehmen</span>
 			</span>
 			<span id="repaint" class="icon">
-				<img src="icons/t_paintroller.png" onclick="Repaint()"></img>
+				<img src="icons/t_paintroller.png" onclick="setMode('repaint');"></img>
 				<span>Voxel neu einfärben</span>
 			</span>
 			<br>
 			<!-- <img id="replaceIcon" src="Pics/Replace.png" class="icon" onclick="Replace()"></img> -->
 			<span id="cubeMode" class="icon">
-				<img src="icons/t_magictrowel.png" onclick="CubeMode()"></img>
+				<img src="icons/t_magictrowel.png" onclick="setMode('cubeMode');"></img>
 				<span>Voxelblöcke erzeugen</span>
 			</span>
 			<span id="double" class="icon">
@@ -178,15 +178,18 @@
 		var blocks = {};
 		var colors = {};
 		var usedColors = {};
+		var mode = 'setMode';
 		var pipette = false;
 		var replace = false;
 		var repaint = false;
 		var cubeMode = false;
 		var pickingColor = false;
+		var deleteMode = false;
+		var setMode = true;
 		var cubeModeSelections = [];
 		var actions = [];
 		var actionCounter = 0;
-		var activeColorfield = document.getElementById("colorField0");
+		var activeColorfield = document.getElementById("colorField10");
 		var toReplace;
 		var center = new THREE.Vector3(0,0,0);
 		var color = "909090";
@@ -279,14 +282,13 @@
 					
 					//console.debug("Clicked: " + x + ", " + y + ", " + z);
 					//console.debug("Normal: " + intersections[0].face.normal.x + ", " + intersections[0].face.normal.y + ", " + intersections[0].face.normal.z);
-					if(pipette == true){
+					if(mode == 'pipette'){
 						if(colors[[x,y,z]] != null){
 							color = colors[[x,y,z]];
 							//document.getElementById("colorPicker").value = color.toString(16);
 							//document.getElementById("colorPicker").focus();	
 							//document.getElementById("colorPicker").blur();	
-							pipette = false;
-							document.getElementById("pipette").className = "icon";
+							setMode('setMode');
 							
 							activeColorfield.style.backgroundColor = color.toString(16);
 				
@@ -304,10 +306,10 @@
 							previewCube.material = material;
 				
 						}
-					}else if(repaint == true){
+					}else if(mode == 'repaint'){
 						removeBlock(x,y,z);
 						addBlock(x,y,z, color);
-					}else if(cubeMode == true){
+					}else if(mode == 'cubeMode'){
 						if(cubeModeSelections.length < 1){
 							cubeModeSelections.push(intersections[0].object.position);
 							//console.debug("added");
@@ -347,6 +349,20 @@
 							actionPerformed();
 							CubeMode();
 						}
+					}else if(mode == 'deleteMode'){
+						if(intersections[0].object == previewCube){
+							var toDelete = intersections[1];
+						}else{
+							var toDelete = intersections[0];
+						}
+						var x = toDelete.object.position.x;
+						var y = toDelete.object.position.y;
+						var z = toDelete.object.position.z;
+						//console.debug("Clicked: " + x + ", " + y + ", " + z);
+						var r = removeBlock(x,y,z);
+						if(r == true){
+							actionPerformed();
+						}
 					}else{
 						var p = previewCube.position;
 						x = p.x;
@@ -380,10 +396,18 @@
 					var y = toDelete.object.position.y;
 					var z = toDelete.object.position.z;
 					//console.debug("Clicked: " + x + ", " + y + ", " + z);
-					removeBlock(x,y,z);
-					actionPerformed()
+					var r = removeBlock(x,y,z);
+					if(r == true){
+						actionPerformed();
+					}
 				}
 			}
+		}
+		
+		function setMode(newMode){
+			document.getElementById(mode).className = "icon";
+			mode = newMode;
+			document.getElementById(mode).className = "p_icon";
 		}
 	</script>
 	<script>
@@ -444,7 +468,7 @@
 					var x = Math.floor(intersections[i].object.position.x)
 					var y = Math.floor(intersections[i].object.position.y)
 					var z = Math.floor(intersections[i].object.position.z)
-					if(repaint == false && pipette == false){
+					if(mode != 'repaint' && mode != 'pipette' && mode != 'deleteMode'){
 						x += n.x;
 						y += n.y;
 						z += n.z;
@@ -459,6 +483,11 @@
 			scene.remove(block);
 			blocks[[x,y,z]] = null;
 			colors[[x,y,z]] = null;
+			if(block == null || block === "undefined"){
+				return false;
+			}else{
+				return true;
+			}
 		}
 		
 		function onWindowResize( e ) {
@@ -649,6 +678,26 @@
 			}else{
 				pipette = true;
 				document.getElementById("pipette").className = "p_icon";
+			}
+		}
+		
+		function SetMode(){
+			if(setMode == true){
+				setMode = false;
+				document.getElementById("setMode").className = "icon";
+			}else{
+				setMode = true;
+				document.getElementById("setMode").className = "p_icon";
+			}
+		}
+		
+		function DeleteMode(){
+			if(deleteMode == true){
+				pipette = false;
+				document.getElementById("deleteMode").className = "icon";
+			}else{
+				deleteMode = true;
+				document.getElementById("deleteMode").className = "p_icon";
 			}
 		}
 		
