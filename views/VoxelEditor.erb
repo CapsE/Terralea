@@ -323,8 +323,9 @@
 							z = p.z;		
 							addBlock(x,y,z, color);
 							
+							//color = parseInt(c, 16);
 							var geometry = new THREE.CubeGeometry( 1, 1, 1 );
-							var uniforms = {myColor: { type: "c", value: new THREE.Color( convertHex("#FF0000") )}, myTransparenz:{type: "f", value: 0.7}};
+							var uniforms = {myColor: { type: "c", value: new THREE.Color( color )}, myTransparenz:{type: "f", value: 0.7}};
 							var material = new THREE.ShaderMaterial({
 								uniforms: uniforms,
 								vertexShader: document.getElementById('2d-vertex-shader').innerHTML,
@@ -527,7 +528,7 @@
 						var dx = xmin[1] - xmin[0];
 						var dy = ymin[1] - ymin[0];
 						var dz = zmin[1] - zmin[0];
-						cubePreview.scale.set(Math.max(dx, 1), Math.max(dy, 1), Math.max(dz, 1));
+						cubePreview.scale.set(Math.max(dx +1, 1), Math.max(dy +1, 1), Math.max(dz+1, 1));
 						cubePreview.position.set(xmin[0] + dx/2, ymin[0] + dy/2, zmin[0] + dz/2);
 					}
 				}
