@@ -316,7 +316,11 @@
 						addBlock(x,y,z, color);
 					}else if(mode == 'cubeMode'){
 						if(cubeModeSelections.length < 1){
-							cubeModeSelections.push(intersections[i].object.position);
+							cubeModeSelections.push(previewCube.position);
+							var p = previewCube.position;
+							x = p.x;
+							y = p.y;
+							z = p.z;		
 							addBlock(x,y,z, color);
 							
 							var geometry = new THREE.CubeGeometry( 1, 1, 1 );
@@ -331,7 +335,7 @@
 							scene.add( cubePreview );
 							//console.debug("added");
 						}else{
-							cubeModeSelections.push(intersections[i].object.position);
+							cubeModeSelections.push(previewCube.position);
 							var cm = cubeModeSelections;
 							var xmin = [1000,-1000];
 							var ymin = [1000,-1000];
