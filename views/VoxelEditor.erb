@@ -90,7 +90,7 @@
 		
 		<div id="toolbar" class="window" style="position:fixed; right:80px; top:104px;">
 			<input id="colorPicker" class="color" onblur="colorPicked()" onclick="PickingColor()" style="display:none;">
-			<span id="setMode" class="p_icon">
+			<span id="setMode" class="icon iconActive">
 				<img src="icons/t_add.png" onclick="setMode('setMode');"></img>
 				<span>Voxel erzeugen <i>(Linksklick)</i></span>
 			</span>
@@ -407,7 +407,7 @@
 		function setMode(newMode){
 			document.getElementById(mode).className = "icon";
 			mode = newMode;
-			document.getElementById(mode).className = "p_icon";
+			document.getElementById(mode).className = "icon iconActive";
 		}
 	</script>
 	<script>
@@ -677,7 +677,7 @@
 				document.getElementById("pipette").className = "icon";
 			}else{
 				pipette = true;
-				document.getElementById("pipette").className = "p_icon";
+				document.getElementById("pipette").className = "iconActive";
 			}
 		}
 		
@@ -687,7 +687,7 @@
 				document.getElementById("setMode").className = "icon";
 			}else{
 				setMode = true;
-				document.getElementById("setMode").className = "p_icon";
+				document.getElementById("setMode").className = "icon iconActive";
 			}
 		}
 		
@@ -697,7 +697,7 @@
 				document.getElementById("deleteMode").className = "icon";
 			}else{
 				deleteMode = true;
-				document.getElementById("deleteMode").className = "p_icon";
+				document.getElementById("deleteMode").className = "icon iconActive";
 			}
 		}
 		
@@ -707,7 +707,7 @@
 				document.getElementById("repaint").className = "icon";
 			}else{
 				repaint = true;
-				document.getElementById("repaint").className = "p_icon";
+				document.getElementById("repaint").className = "icon iconActive";
 			}
 			
 		}
@@ -716,7 +716,7 @@
 			if(cubeMode == false){
 				cubeMode = true;
 				cubeModeSelections = [];
-				document.getElementById("cubeMode").className = "p_icon";
+				document.getElementById("cubeMode").className = "icon iconActive";
 			}else{
 				cubeMode = false;
 				document.getElementById("cubeMode").className = "icon";

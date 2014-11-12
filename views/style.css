@@ -7,6 +7,7 @@ html, body{
 	overflow:hidden;
 }
 
+
 .colorBox{
 	background-color:red;
 	width:48px;
@@ -41,6 +42,13 @@ html, body{
 	margin: -2px;
 }
 
+.iconActive {
+	border:solid;
+	border-width:2px;
+	border-color:#99B2B7;
+	margin: -2px;
+}
+
 .icon span {
 	z-index:999;
 	opacity: 0;
@@ -63,21 +71,7 @@ html, body{
 	opacity: 1;
 	transition-delay: 0.5s;
  }
-
-.p_icon{
-	width:48px;
-	height:48px;
-	position:relative;	
-	cursor: pointer;
-	margin: -2px;
-	float: left;
-}
-
-.p_icon:hover {
-	border: solid 2px #99B2B7;
-	margin: -2px;
-}
-
+ 
 .timeElement{
 	width:16px;
 	height:16px;
