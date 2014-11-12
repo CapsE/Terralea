@@ -666,18 +666,21 @@
 				for(var i = 0; i < 20; i++){
 					element = document.getElementById("timeElement" + i);
 					if(i != c){
-						if(element.dataset.active == "true"){
-							element.style.backgroundColor = "#99B2B7";
-						}else{
-							element.style.backgroundColor = "transparent";
+						if(element.dataset.active == "true"){ // inaktiver Speicherpunkt
+							//element.style.backgroundColor = "#99B2B7";
+							element.className = "timeElement frozenTimeElement";
+						}else{ // leerer Speicherpunkt
+							//element.style.backgroundColor = "transparent";
+							element.className = "timeElement";
 						}
-						element.style.borderColor = "#948C75";
-					}else{
-						element.style.backgroundColor = "#948C75";
-						element.style.borderColor = "#7A6A53";
+						//element.style.borderColor = "#948C75";
+					}else{ // aktiver Speicherpunkt
+						//element.style.backgroundColor = "#948C75";
+						//element.style.borderColor = "#7A6A53";
+						element.className = "timeElement activeTimeElement";
 					}
 				}
-				te.style.borderWidth = "2px";
+				//te.style.borderWidth = "2px";
 				autoLoad(actions[c]);
 				actionCounter = c;
 			}
@@ -688,7 +691,8 @@
 				actions.splice(actionCounter +1, actions.length);
 				for(var i = actionCounter+1; i < 20; i++){
 					element = document.getElementById("timeElement" + i);
-					element.style.backgroundColor = "transparent";
+					//element.style.backgroundColor = "transparent";
+					element.className = "timeElement";
 					element.dataset.active = "false";
 				}
 			}
@@ -700,13 +704,15 @@
 			var te = document.getElementById("timeElement" + actionCounter);
 			for(var i = 0; i < 20; i++){
 				element = document.getElementById("timeElement" + i);
-				element.style.borderColor = "";
-				if(i < actionCounter){
-					element.style.backgroundColor = "#99B2B7";
+				//element.style.borderColor = "";
+				if(i < actionCounter){ // als inaktiver Speicherpunkt
+					//element.style.backgroundColor = "#99B2B7";
+					element.className = "timeElement frozenTimeElement";
 				}
-			}
-			te.style.backgroundColor = "#948C75";
-			te.style.borderColor = "#7A6A53";
+			} // als aktiven Speicherpunkt
+			//te.style.backgroundColor = "#948C75";
+			//te.style.borderColor = "#7A6A53";
+			te.className = "timeElement activeTimeElement";
 			te.dataset.active = true;
 		}
 		

@@ -1,3 +1,18 @@
+/* 
+GIMP Palette
+Name: Voxel Editor v02
+#
+122 106  83 Braun Kontur						#7A6A53 
+148 140 117 Helles Braun						#948C75
+153 178 183	Graublau Schatten					#99B2B7
+213 222 217 Graublau Hell Hintergrund			#D5DED9
+217 206 178 Ocker Akzent						#D9CEB2
+255 255 255 Schwarz	Akzent						#FFFFFF
+0	0	0	Weiß Akzent							#000000
+ */
+
+
+
 html, body{
 	margin:0px;
 	padding:0px;
@@ -75,13 +90,24 @@ html, body{
 .timeElement{
 	width:16px;
 	height:16px;
-	cursor:pointer;
+	/* cursor:pointer; */
 	margin:4px;
 	margin-top: 16px;
 	float:left;
 	border:solid;
 	border-width:2px;
 	border-color:#948C75;
+	cursor:default;
+}
+
+.frozenTimeElement {	
+	background-color:#99B2B7;
+	cursor: pointer;
+}
+
+.activeTimeElement {
+	background-color:#948C75;
+	border-color:#7A6A53;
 }
 
 .button{
