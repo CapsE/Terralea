@@ -119,4 +119,5 @@
 			}
 			colors = {};
 			blocks = {};
+			cubeModeSelections = [];
 		}
